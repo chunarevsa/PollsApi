@@ -33,9 +33,9 @@ public class AuthController {
 	 * @param loginRequest
 	 * @return
 	 */
-	@PostMapping("/login")
+	//@PostMapping("/login")
 	//@ApiOperation(value = "Логин по почте, паролю и устройству")
-	public ResponseEntity login (@Valid @RequestBody LoginRequest loginRequest) {
+	/* public ResponseEntity login (@Valid @RequestBody LoginRequest loginRequest) {
 		
 		Authentication authentication = authService.authenticateUser(loginRequest)
 			.orElseThrow(() -> new UserLoginException("аутентификации", loginRequest.getEmail()));
@@ -51,5 +51,5 @@ public class AuthController {
 						return ResponseEntity.ok(new JwtAuthenticationResponse(jwtToken, refreshToken,  jwtTokenProvider.getExpiryDuration()));
 					}).orElseThrow(() -> new UserLoginException("создания токена", loginRequest.getEmail()));
 
-	} 
+	}  */
 }
