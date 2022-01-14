@@ -1,13 +1,11 @@
 package com.example.pollsapi.controllers;
 
-import java.util.Set;
-
 import javax.validation.Valid;
 
-import com.example.pollsapi.entity.Poll;
 import com.example.pollsapi.payload.ApiResponse;
 import com.example.pollsapi.payload.EditPollRequest;
 import com.example.pollsapi.payload.PollRequest;
+import com.example.pollsapi.payload.QuestionRequest;
 import com.example.pollsapi.service.PollService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +54,6 @@ public class PollController {
 
 	/**
 	 * Получение Polls
-	 * @param setPoll
-	 * @param jwtUser
 	 * @return
 	 */
 	@GetMapping("/all")
@@ -68,6 +64,18 @@ public class PollController {
 	}
 
 	/**
+	 * Прохождение опроса
+	 * @param poleId
+	 * @return
+	 */
+	@PostMapping("/{id}/start")
+	//@ApiOperation(value = "Добавление Item")
+	public ResponseEntity start() {
+
+		return ResponseEntity.ok().body(pollService.start());
+	}
+
+	/**
 	 * Добавлние опроса
 	 * @param pollRequest
 	 * @return
@@ -75,30 +83,29 @@ public class PollController {
 	@PostMapping("/add")
 	@PreAuthorize("hasRole('ADMIN')")
 	//@ApiOperation(value = "Добавление Item")
-	public ResponseEntity addItem(@Valid @RequestBody PollRequest pollRequest) {
+	public ResponseEntity addPoll(@Valid @RequestBody PollRequest pollRequest) {
 
-		return ResponseEntity.ok().body(pollService.addItem(pollRequest));
-
+		return ResponseEntity.ok().body(pollService.addPoll(pollRequest));
 	}
 
 	/**
 	 * Изменение опроса
-	 * @param id
+	 * @param poleId
 	 * @param editPollRequest
 	 * @return
 	 */
 	@PutMapping("/{id}/edit")
 	@PreAuthorize("hasRole('ADMIN')")
 	//@ApiOperation(value = "Изменение Item (без цен)")
-	public ResponseEntity editItem(@PathVariable(value = "id") Long id,
+	public ResponseEntity editItem(@PathVariable(value = "id") Long poleId,
 			@Valid @RequestBody EditPollRequest editPollRequest) {
 
-		return ResponseEntity.ok().body(pollService.editPoll(id, editPollRequest));
+		return ResponseEntity.ok().body(pollService.editPoll(poleId, editPollRequest));
 
 	}
 
 	/**
-	 *  Удаление (Выключение) Item
+	 *  Удаление опроса
 	 * @param id
 	 * @return
 	 */
@@ -106,8 +113,53 @@ public class PollController {
 	@PreAuthorize("hasRole('ADMIN')")
 	//@ApiOperation(value = "Получение Items. Формат ответа зависить от роли")
 	public ResponseEntity deleteItem(@PathVariable(value = "id") Long id) {
-		pollService.deletePoll(id);
+		pollService.delete(id);
 		return ResponseEntity.ok(new ApiResponse(true, "Poll " + id + " был удален"));
 	}
+
+	/**
+	 * Добавление вопроса
+	 * @param pollId
+	 * @param qestionRequest
+	 * @return
+	 */
+	@PostMapping("/{id}/questions/add")
+	@PreAuthorize("hasRole('ADMIN')")
+	//@ApiOperation(value = "Добавление цены Item")
+	public ResponseEntity addQuestion (@PathVariable(value = "id") Long pollId,
+			@Valid @RequestBody QuestionRequest qestionRequest) {
+
+		return ResponseEntity.ok().body(pollService.addQuestion(qestionRequest, pollId));
+	}
+
+	/**
+	 * Изменение вопроса
+	 * @param questionId
+	 * @param qestionRequest
+	 * @return
+	 */
+	@PutMapping("/questions/{questionId}/edit")
+	@PreAuthorize("hasRole('ADMIN')")
+	//@ApiOperation(value = "Получение Items. Формат ответа зависить от роли")
+	public ResponseEntity editQuestion(@PathVariable(value = "priceId") Long priceId,
+			@Valid @RequestBody QuestionRequest qestionRequest) {
+
+		return ResponseEntity.ok().body(pollService.editQuestion(qestionRequest, priceId));
+	}
+
+	/**
+	 *  Удаление вопроса
+	 * @param id
+	 * @return
+	 */
+	@DeleteMapping("/questions/{questionId}/delete")
+	@PreAuthorize("hasRole('ADMIN')")
+	//@ApiOperation(value = "Получение Items. Формат ответа зависить от роли")
+	public ResponseEntity deleteQuestion(@PathVariable(value = "id") Long id) {
+		pollService.deleteQuestion(id);
+		return ResponseEntity.ok(new ApiResponse(true, "Poll " + id + " был удален"));
+	}
+
+
 	
 }
