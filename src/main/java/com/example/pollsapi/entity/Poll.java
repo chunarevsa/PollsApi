@@ -33,7 +33,7 @@ public class Poll extends DateAudit {
 
 	@OneToMany (cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "POLL_ID")
-	private Set<Question> prices = new HashSet<>();
+	private Set<Question> questions = new HashSet<>();
 
 	public Poll() {
 		super();
@@ -71,13 +71,12 @@ public class Poll extends DateAudit {
 		this.active = active;
 	}
 
-	public Set<Question> getPrices() {
-		return this.prices;
+	public Set<Question> getQuestions() {
+		return this.questions;
 	}
 
-	public void setPrices(Set<Question> prices) {
-		this.prices = prices;
+	public void setQuestions(Set<Question> questions) {
+		this.questions = questions;
 	}
-
 
 }

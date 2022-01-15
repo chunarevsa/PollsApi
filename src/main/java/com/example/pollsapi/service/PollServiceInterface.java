@@ -1,18 +1,18 @@
 package com.example.pollsapi.service;
 
+import java.util.Optional;
 import java.util.Set;
 
 import com.example.pollsapi.entity.Poll;
-import com.example.pollsapi.payload.EditPollRequest;
 import com.example.pollsapi.payload.PollRequest;
 
-public interface PollInterface {
+public interface PollServiceInterface {
 
 	public Set<Poll> getPolls();
 	
-	public Poll addPoll(PollRequest pollRequest);
+	public Optional<Poll> addPoll(PollRequest pollRequest);
 
-	public Poll editPoll(Long id, EditPollRequest editPollRequest);
+	public Optional<Poll> editPoll(Long id, PollRequest pollRequest);
 
 	public Object start();
 

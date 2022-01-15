@@ -3,7 +3,6 @@ package com.example.pollsapi.controllers;
 import javax.validation.Valid;
 
 import com.example.pollsapi.payload.ApiResponse;
-import com.example.pollsapi.payload.EditPollRequest;
 import com.example.pollsapi.payload.PollRequest;
 import com.example.pollsapi.payload.QuestionRequest;
 import com.example.pollsapi.service.PollService;
@@ -98,9 +97,9 @@ public class PollController {
 	@PreAuthorize("hasRole('ADMIN')")
 	//@ApiOperation(value = "Изменение Item (без цен)")
 	public ResponseEntity editItem(@PathVariable(value = "id") Long poleId,
-			@Valid @RequestBody EditPollRequest editPollRequest) {
+			@Valid @RequestBody PollRequest pollRequest) {
 
-		return ResponseEntity.ok().body(pollService.editPoll(poleId, editPollRequest));
+		return ResponseEntity.ok().body(pollService.editPoll(poleId, pollRequest));
 
 	}
 
@@ -141,10 +140,10 @@ public class PollController {
 	@PutMapping("/questions/{questionId}/edit")
 	@PreAuthorize("hasRole('ADMIN')")
 	//@ApiOperation(value = "Получение Items. Формат ответа зависить от роли")
-	public ResponseEntity editQuestion(@PathVariable(value = "priceId") Long priceId,
+	public ResponseEntity editQuestion(@PathVariable(value = "questionId") Long questionId,
 			@Valid @RequestBody QuestionRequest qestionRequest) {
 
-		return ResponseEntity.ok().body(pollService.editQuestion(qestionRequest, priceId));
+		return ResponseEntity.ok().body(pollService.editQuestion(qestionRequest, questionId));
 	}
 
 	/**
@@ -155,9 +154,9 @@ public class PollController {
 	@DeleteMapping("/questions/{questionId}/delete")
 	@PreAuthorize("hasRole('ADMIN')")
 	//@ApiOperation(value = "Получение Items. Формат ответа зависить от роли")
-	public ResponseEntity deleteQuestion(@PathVariable(value = "id") Long id) {
-		pollService.deleteQuestion(id);
-		return ResponseEntity.ok(new ApiResponse(true, "Poll " + id + " был удален"));
+	public ResponseEntity deleteQuestion(@PathVariable(value = "questionId") Long questionId) {
+		pollService.deleteQuestion(questionId);
+		return ResponseEntity.ok(new ApiResponse(true, "Question " + questionId + " был удален"));
 	}
 
 
