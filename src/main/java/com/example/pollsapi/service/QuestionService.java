@@ -25,7 +25,8 @@ public class QuestionService implements DeleteInterface, QuestionServiceInterfac
 		Question newQuestion = new Question();
 		newQuestion.setText(questionRequest.getText());
 		newQuestion.setActive(questionRequest.getActive());
-		newQuestion.setQuestionType(questionRequest.getQuestionType());//TODO: проверка
+		newQuestion.setQuestionType(questionRequest.getQuestionType()); 
+		//TODO: проверка
 		return saveQuestion(newQuestion);
 	}
 
