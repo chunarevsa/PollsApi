@@ -89,7 +89,6 @@ public class Question {
 		this.poll = poll;
 	}
 
-
 	@Override
 	public String toString() {
 		return "{" +

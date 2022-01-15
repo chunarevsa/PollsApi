@@ -32,7 +32,7 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 	// только активных по дате и из актив
 	@Override
 	public Set<Poll> getPolls() {
-
+		System.out.println("Всё идёт по плану");
 		return null;
 	}
 

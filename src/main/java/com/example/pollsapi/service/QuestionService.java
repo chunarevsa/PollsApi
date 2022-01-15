@@ -9,7 +9,9 @@ import com.example.pollsapi.payload.QuestionRequest;
 import com.example.pollsapi.repository.QuestionRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class QuestionService implements DeleteInterface, QuestionServiceInterface {
 
 	private final QuestionRepository questionRepository;
