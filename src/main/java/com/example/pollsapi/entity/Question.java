@@ -1,5 +1,9 @@
 package com.example.pollsapi.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -20,11 +25,11 @@ public class Question {
 
 	@Id
 	@Column (name = "QUESTION_ID")
-	@GeneratedValue(strategy =  GenerationType.AUTO)
+	@GeneratedValue(strategy =  GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "TEXT", nullable = false)
-	private String text;
+	@Column(name = "BODY", nullable = false)
+	private String body;
 
 	@Column(name = "IS_ACTIVE", nullable = false)
 	private Boolean active;
@@ -32,6 +37,10 @@ public class Question {
 	@Column(name = "TYPE", nullable = false)
 	@Enumerated (EnumType.STRING)
 	private QuestionType questionType;
+
+	@OneToMany (cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "QUESTION_ID")
+	private Set<Answer> answers = new HashSet<>();
 
 	@JsonIgnore
 	@ManyToOne (fetch = FetchType.LAZY)
@@ -41,11 +50,12 @@ public class Question {
 	public Question() {
 	}
 
-	public Question(Long id, String text, Boolean active, QuestionType questionType, Poll poll) {
+	public Question(Long id, String body, Boolean active, QuestionType questionType, Set<Answer> answers, Poll poll) {
 		this.id = id;
-		this.text = text;
+		this.body = body;
 		this.active = active;
 		this.questionType = questionType;
+		this.answers = answers;
 		this.poll = poll;
 	}
 
@@ -53,12 +63,12 @@ public class Question {
 		return this.id;
 	}
 
-	public String getText() {
-		return this.text;
+	public String getBody() {
+		return this.body;
 	}
 
-	public void setText(String text) {
-		this.text = text;
+	public void setBody(String body) {
+		this.body = body;
 	}
 
 	public QuestionType getQuestionType() {
@@ -89,15 +99,12 @@ public class Question {
 		this.poll = poll;
 	}
 
-	@Override
-	public String toString() {
-		return "{" +
-			" id='" + getId() + "'" +
-			", text='" + getText() + "'" +
-			", active='" + isActive() + "'" +
-			", questionType='" + getQuestionType() + "'" +
-			"}";
+	public Set<Answer> getAnswers() {
+		return this.answers;
 	}
 
+	public void setAnswers(Set<Answer> answers) {
+		this.answers = answers;
+	}
 
 }

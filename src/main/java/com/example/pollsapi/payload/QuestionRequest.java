@@ -1,5 +1,8 @@
 package com.example.pollsapi.payload;
 
+import java.util.Set;
+
+import com.example.pollsapi.entity.Answer;
 import com.example.pollsapi.entity.QuestionType;
 
 public class QuestionRequest {
@@ -7,8 +10,16 @@ public class QuestionRequest {
 	private String text;
 	private Boolean active;
 	private QuestionType questionType;
+	private Set<Answer> answers;
 
 	public QuestionRequest() {
+	}
+
+	public QuestionRequest(String text, Boolean active, QuestionType questionType, Set<Answer> answers) {
+		this.text = text;
+		this.active = active;
+		this.questionType = questionType;
+		this.answers = answers;
 	}
 
 	public String getText() {
@@ -39,5 +50,12 @@ public class QuestionRequest {
 		this.questionType = questionType;
 	}
 
+	public Set<Answer> getAnswers() {
+		return this.answers;
+	}
+
+	public void setAnswers(Set<Answer> answers) {
+		this.answers = answers;
+	}
 
 }

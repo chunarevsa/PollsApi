@@ -4,7 +4,10 @@ import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 
+import com.example.pollsapi.entity.Answer;
 import com.example.pollsapi.entity.Question;
+import com.example.pollsapi.entity.QuestionType;
+import com.example.pollsapi.exception.InvalidQuestionException;
 import com.example.pollsapi.exception.ResourceNotFoundException;
 import com.example.pollsapi.payload.QuestionRequest;
 import com.example.pollsapi.repository.QuestionRepository;
@@ -25,21 +28,49 @@ public class QuestionService implements DeleteInterface, QuestionServiceInterfac
 	@Override
 	public Question addQuestion(QuestionRequest questionRequest) {
 		
+		validateQuestionRequest(questionRequest);
+		
 		Question newQuestion = new Question();
-		newQuestion.setText(questionRequest.getText());
+		newQuestion.setBody(questionRequest.getText());
 		newQuestion.setActive(questionRequest.getActive());
-		newQuestion.setQuestionType(questionRequest.getQuestionType()); 
+		newQuestion.setQuestionType(questionRequest.getQuestionType());
+		newQuestion.setAnswers(questionRequest.getAnswers());
 		//TODO: проверка
 		return saveQuestion(newQuestion);
+	}
+
+	private void validateQuestionRequest(QuestionRequest questionRequest) {
+
+		QuestionType questionType = questionRequest.getQuestionType();
+		Set<Answer> answers = questionRequest.getAnswers();
+		switch (questionType) {
+			case TEXT_ANSWER:
+				if (!answers.isEmpty()) {
+					throw new InvalidQuestionException("Вопрос", "", questionType);
+				}
+				break;
+			case ONE_ANSWER:
+				if (answers.size() < 2) {
+					throw new InvalidQuestionException("Вопрос", "", questionType);
+				}
+				break;
+			case MANY_ANSWER:
+				if (answers.size() < 2) {
+				throw new InvalidQuestionException("Вопрос", "", questionType);
+				}
+				break;	
+		}
 	}
 
 	@Override
 	public Optional<Question> editQuestion(QuestionRequest questionRequest, 
 				Set<Question> questions, int questionQueueId) {
 		
+		validateQuestionRequest(questionRequest);
+		
 		Question question = getQuestionFromQueue(questions, questionQueueId);
 
-		question.setText(questionRequest.getText());
+		question.setBody(questionRequest.getText());
 		question.setActive(questionRequest.getActive());
 		question.setQuestionType(questionRequest.getQuestionType());//TODO: проверка
 
@@ -73,15 +104,6 @@ public class QuestionService implements DeleteInterface, QuestionServiceInterfac
 			iterator.next();
 		}
 		return iterator.next();
-	}
-
-	public Question getQuestionFromRequest(QuestionRequest questionRequest) {
-		
-		// валидация реквеста
-
-		Question question = addQuestion(questionRequest);
-
-		return question;
 	}
 
 	public void saveQuestions(Set<Question> questions) {

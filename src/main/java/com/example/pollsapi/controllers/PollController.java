@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import com.example.pollsapi.payload.ApiResponse;
 import com.example.pollsapi.payload.PollRequest;
 import com.example.pollsapi.payload.QuestionRequest;
+import com.example.pollsapi.payload.StartPollRequest;
 import com.example.pollsapi.service.PollService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
-- добавление/изменение/удаление опросов.
-Атрибуты опроса: название, дата старта, дата окончания, описание. 
-После создания поле "дата старта" у опроса менять нельзя
-
 - добавление/изменение/удаление вопросов в опросе. 
 Атрибуты вопросов: текст вопроса, тип вопроса 
 (ответ текстом, ответ с выбором одного варианта, 
@@ -71,9 +68,9 @@ public class PollController {
 	 */
 	@PostMapping("/{pollid}/start")
 	//@ApiOperation(value = "Добавление Item")
-	public ResponseEntity start() {
+	public ResponseEntity start(@Valid @RequestBody StartPollRequest startPollRequest) {
 
-		return ResponseEntity.ok().body(pollService.start());
+		return ResponseEntity.ok().body(pollService.start(startPollRequest.getUserId()));
 	}
 
 	/**

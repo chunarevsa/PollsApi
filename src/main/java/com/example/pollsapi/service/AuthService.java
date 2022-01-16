@@ -2,8 +2,6 @@ package com.example.pollsapi.service;
 
 import java.util.Optional;
 
-import javax.validation.Valid;
-
 import com.example.pollsapi.exception.UserLoginException;
 import com.example.pollsapi.payload.JwtAuthenticationResponse;
 import com.example.pollsapi.payload.LoginRequest;

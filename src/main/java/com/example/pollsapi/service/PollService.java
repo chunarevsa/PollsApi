@@ -39,8 +39,23 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 		return pollRepository.findAll();
 	}
 
+	/**
+ *
+- добавление/изменение/удаление вопросов в опросе. 
+Атрибуты вопросов: текст вопроса, тип вопроса 
+(ответ текстом, ответ с выбором одного варианта, 
+ответ с выбором нескольких вариантов)
+
+- получение списка активных опросов
+- прохождение опроса: опросы можно проходить анонимно, 
+в качестве идентификатора пользователя в API передаётся числовой ID, 
+по которому сохраняются ответы пользователя на вопросы; 
+один пользователь может участвовать в любом количестве опросов
+ */
+
 	@Override
-	public Object start() {
+	public Object start(Long userId) {
+		
 		return null;
 	}
 
@@ -100,7 +115,7 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 	public Optional<Question> addQuestion(QuestionRequest questionRequest, Long pollId) {
 		
 		Poll poll = findById(pollId);
-		Question newQuestion = questionService.getQuestionFromRequest(questionRequest);
+		Question newQuestion = questionService.addQuestion(questionRequest);
 		poll.getQuestions().add(newQuestion);
 		questionService.saveQuestions(poll.getQuestions());
 		savePoll(poll);

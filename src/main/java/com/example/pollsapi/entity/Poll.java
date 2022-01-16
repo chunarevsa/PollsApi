@@ -1,9 +1,6 @@
 package com.example.pollsapi.entity;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -22,7 +19,7 @@ public class Poll extends DateAudit {
 
 	@Id
 	@Column (name = "POLL_ID")
-	@GeneratedValue(strategy =  GenerationType.AUTO)
+	@GeneratedValue(strategy =  GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(name = "NAME", nullable = false)
