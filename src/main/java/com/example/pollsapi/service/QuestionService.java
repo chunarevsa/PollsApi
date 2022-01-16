@@ -1,5 +1,6 @@
 package com.example.pollsapi.service;
 
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 
@@ -33,9 +34,11 @@ public class QuestionService implements DeleteInterface, QuestionServiceInterfac
 	}
 
 	@Override
-	public Optional<Question> editQuestion(QuestionRequest questionRequest, Long questionId) {
+	public Optional<Question> editQuestion(QuestionRequest questionRequest, 
+				Set<Question> questions, int questionQueueId) {
 		
-		Question question = findById(questionId);
+		Question question = getQuestionFromQueue(questions, questionQueueId);
+
 		question.setText(questionRequest.getText());
 		question.setActive(questionRequest.getActive());
 		question.setQuestionType(questionRequest.getQuestionType());//TODO: проверка
@@ -56,6 +59,20 @@ public class QuestionService implements DeleteInterface, QuestionServiceInterfac
 
 	public void deleteQuestions(Set<Question> questions) {
 		questions.forEach(question -> delete(question.getId()));
+	}
+
+	public Question getQuestionFromQueue(Set<Question> questions,int questionQueueId) {
+		if (questions.size() < questionQueueId) {
+			throw new ResourceNotFoundException("Вопрос", "номером", questionQueueId);
+		}
+
+		Iterator<Question> iterator = questions.iterator();
+		
+		for (int i = 1; i<questionQueueId; i++) {
+			System.err.println(i);
+			iterator.next();
+		}
+		return iterator.next();
 	}
 
 	public Question getQuestionFromRequest(QuestionRequest questionRequest) {

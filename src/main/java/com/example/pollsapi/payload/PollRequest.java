@@ -1,16 +1,26 @@
 package com.example.pollsapi.payload;
 
-import java.time.Instant;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PollRequest {
 	
 	private String name;
 	private String description;
 	private Boolean active;
-	private Instant expirationDate;
+	private String expirationDate;
 
 	public PollRequest() {
 	}
+
+	public PollRequest(String name, String description, Boolean active, String expirationDate) throws ParseException {
+		this.name = name;
+		this.description = description;
+		this.active = active;
+		this.expirationDate = expirationDate;
+	}
+
 
 	public String getName() {
 		return this.name;
@@ -40,11 +50,11 @@ public class PollRequest {
 		this.active = active;
 	}
 
-	public Instant getExpirationDate() {
+	public String getExpirationDate() {
 		return this.expirationDate;
 	}
 
-	public void setExpirationDate(Instant expirationDate) {
+	public void setExpirationDate(String expirationDate) {
 		this.expirationDate = expirationDate;
 	}
 

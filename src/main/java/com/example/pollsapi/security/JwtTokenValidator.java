@@ -33,6 +33,7 @@ public class JwtTokenValidator {
 
 		} catch (MalformedJwtException ex) {
 			 //logger.error("Invalid JWT token");
+			 System.err.println("TYT");
 			 throw new InvalidTokenRequestException("JWT", token, "Malformed jwt token");
 
 		} catch (ExpiredJwtException ex) {

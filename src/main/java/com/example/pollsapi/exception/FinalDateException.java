@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class FinalDateException extends RuntimeException {
 
 	private final String title;
-   private final Object fieldName; // TODO: формат даты
+   private final Object fieldName; //мб формат даты?
    private final Object fieldValue;
 
 	public FinalDateException(String title, String fieldName, Object fieldValue) {

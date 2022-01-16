@@ -1,6 +1,9 @@
 package com.example.pollsapi.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -31,9 +34,9 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 
 	// только активных по дате и из актив
 	@Override
-	public Set<Poll> getPolls() {
-		System.out.println("Всё идёт по плану");
-		return null;
+	public List<Poll> getPolls() {
+		
+		return pollRepository.findAll();
 	}
 
 	@Override
@@ -42,33 +45,42 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 	}
 
 	@Override
-	public Optional<Poll> addPoll(PollRequest pollRequest) {
+	public Optional<Poll> addPoll(PollRequest pollRequest) throws ParseException  {
 
-		if (validateExpirationDate(pollRequest.getExpirationDate())) {
-			throw new FinalDateException("Дата", pollRequest.getExpirationDate().toString(), Instant.now());
+		
+		Instant expirationDate = getInstantDate(pollRequest.getExpirationDate());
+		
+		if (validateExpirationDate(expirationDate)) {
+			throw new FinalDateException("Дата", pollRequest.getExpirationDate(), Instant.now());
 		}
 
 		Poll newPoll = new Poll();
 		newPoll.setName(pollRequest.getName());
 		newPoll.setActive(pollRequest.getActive());
-		newPoll.setExpirationDate(pollRequest.getExpirationDate());
+		newPoll.setExpirationDate(expirationDate);
 		newPoll.setDescription(pollRequest.getDescription());
 		Poll savedPoll = savePoll(newPoll);
 
 		return Optional.of(savedPoll);
 	}
 
+	private Instant getInstantDate(String expirationDate) throws ParseException {
+		return new SimpleDateFormat("y-M-d").parse(expirationDate).toInstant();
+	}
+
 	@Override
-	public Optional<Poll> editPoll(Long id, PollRequest pollRequest) {
+	public Optional<Poll> editPoll(Long id, PollRequest pollRequest) throws ParseException {
 		
-		if (validateExpirationDate(pollRequest.getExpirationDate())) {
+		Instant expirationDate = getInstantDate(pollRequest.getExpirationDate());
+
+		if (validateExpirationDate(expirationDate)) {
 			throw new FinalDateException("Дата", pollRequest.getExpirationDate().toString(), Instant.now());
 		}
 
 		Poll poll = findById(id);
 		poll.setName(pollRequest.getName());
 		poll.setActive(pollRequest.getActive());
-		poll.setExpirationDate(pollRequest.getExpirationDate());
+		poll.setExpirationDate(expirationDate);
 		poll.setDescription(pollRequest.getDescription());
 		Poll savedPoll = savePoll(poll);
 
@@ -85,18 +97,6 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 
 	}
 
-	private Poll findById(Long id) {
-		return pollRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Poll", "id", id));
-	}
-
-	private boolean validateExpirationDate(Instant expirationDate) {
-		return expirationDate.isAfter(Instant.now());
-	}
-
-	private Poll savePoll(Poll poll) {
-		return pollRepository.save(poll);
-	}
-
 	public Optional<Question> addQuestion(QuestionRequest questionRequest, Long pollId) {
 		
 		Poll poll = findById(pollId);
@@ -107,12 +107,31 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 		return Optional.of(newQuestion);
 	}
 
-	public Optional<Question> editQuestion(QuestionRequest questionRequest, Long questionId) {
-		return questionService.editQuestion(questionRequest, questionId);
+	public Optional<Question> editQuestion(QuestionRequest questionRequest, Long pollId, int questionQueueId) {
+		Poll poll = findById(pollId);
+		Set<Question> questions = poll.getQuestions();
+
+		return questionService.editQuestion(questionRequest, questions, questionQueueId);
 	}
 
-	public void deleteQuestion(Long questionId) {
-		questionService.delete(questionId);
+	public void deleteQuestion(Long pollId, int questionQueueId) {
+		Poll poll = findById(pollId);
+		Set<Question> questions = poll.getQuestions();
+		Question question = questionService.getQuestionFromQueue(questions ,questionQueueId);
+
+		questionService.delete(question.getId());
+	}
+
+	private Poll findById(Long id) {
+		return pollRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Poll", "id", id));
+	}
+
+	private boolean validateExpirationDate(Instant expirationDate) {
+		return expirationDate.isBefore(Instant.now());
+	}
+
+	private Poll savePoll(Poll poll) {
+		return pollRepository.save(poll);
 	}
 
 }

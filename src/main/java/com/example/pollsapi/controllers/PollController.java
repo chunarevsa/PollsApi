@@ -1,5 +1,7 @@
 package com.example.pollsapi.controllers;
 
+import java.text.ParseException;
+
 import javax.validation.Valid;
 
 import com.example.pollsapi.payload.ApiResponse;
@@ -56,7 +58,6 @@ public class PollController {
 	 * @return
 	 */
 	@GetMapping("/all")
-	@PreAuthorize("hasRole('ADMIN')") //TODO: убрать 
 	// @ApiOperation(value = "Получение Items. Формат ответа зависить от роли")
 	public ResponseEntity getPolls() {
 
@@ -68,7 +69,7 @@ public class PollController {
 	 * @param poleId
 	 * @return
 	 */
-	@PostMapping("/{id}/start")
+	@PostMapping("/{pollid}/start")
 	//@ApiOperation(value = "Добавление Item")
 	public ResponseEntity start() {
 
@@ -79,11 +80,12 @@ public class PollController {
 	 * Добавлние опроса
 	 * @param pollRequest
 	 * @return
+	 * @throws ParseException
 	 */
 	@PostMapping("/add")
 	@PreAuthorize("hasRole('ADMIN')")
 	//@ApiOperation(value = "Добавление Item")
-	public ResponseEntity addPoll(@Valid @RequestBody PollRequest pollRequest) {
+	public ResponseEntity addPoll(@Valid @RequestBody PollRequest pollRequest) throws ParseException {
 
 		return ResponseEntity.ok().body(pollService.addPoll(pollRequest));
 	}
@@ -93,12 +95,13 @@ public class PollController {
 	 * @param poleId
 	 * @param editPollRequest
 	 * @return
+	 * @throws ParseException
 	 */
-	@PutMapping("/{id}/edit")
+	@PutMapping("/{pollid}/edit")
 	@PreAuthorize("hasRole('ADMIN')")
 	//@ApiOperation(value = "Изменение Item (без цен)")
-	public ResponseEntity editItem(@PathVariable(value = "id") Long poleId,
-			@Valid @RequestBody PollRequest pollRequest) {
+	public ResponseEntity editItem(@PathVariable(value = "pollid") Long poleId,
+			@Valid @RequestBody PollRequest pollRequest) throws ParseException {
 
 		return ResponseEntity.ok().body(pollService.editPoll(poleId, pollRequest));
 
@@ -109,12 +112,12 @@ public class PollController {
 	 * @param id
 	 * @return
 	 */
-	@DeleteMapping("/{id}/delete")
+	@DeleteMapping("/{pollid}/delete")
 	@PreAuthorize("hasRole('ADMIN')")
 	//@ApiOperation(value = "Получение Items. Формат ответа зависить от роли")
-	public ResponseEntity deleteItem(@PathVariable(value = "id") Long id) {
+	public ResponseEntity deleteItem(@PathVariable(value = "pollid") Long id) {
 		pollService.delete(id);
-		return ResponseEntity.ok(new ApiResponse(true, "Poll " + id + " был удален"));
+		return ResponseEntity.ok(new ApiResponse(true, "Опрос " + id + " был удален"));
 	}
 
 	/**
@@ -123,10 +126,10 @@ public class PollController {
 	 * @param qestionRequest
 	 * @return
 	 */
-	@PostMapping("/{id}/questions/add")
+	@PostMapping("/{pollid}/question/add")
 	@PreAuthorize("hasRole('ADMIN')")
 	//@ApiOperation(value = "Добавление цены Item")
-	public ResponseEntity addQuestion (@PathVariable(value = "id") Long pollId,
+	public ResponseEntity addQuestion (@PathVariable(value = "pollid") Long pollId,
 			@Valid @RequestBody QuestionRequest qestionRequest) {
 
 		return ResponseEntity.ok().body(pollService.addQuestion(qestionRequest, pollId));
@@ -138,13 +141,15 @@ public class PollController {
 	 * @param qestionRequest
 	 * @return
 	 */
-	@PutMapping("/questions/{questionId}/edit")
+	@PutMapping("/{pollId}/question/{questionQueueId}/edit")
 	@PreAuthorize("hasRole('ADMIN')")
 	//@ApiOperation(value = "Получение Items. Формат ответа зависить от роли")
-	public ResponseEntity editQuestion(@PathVariable(value = "questionId") Long questionId,
+	public ResponseEntity editQuestion(
+			@PathVariable(value = "pollId") Long pollId,
+			@PathVariable(value = "questionQueueId") int questionQueueId,
 			@Valid @RequestBody QuestionRequest qestionRequest) {
 
-		return ResponseEntity.ok().body(pollService.editQuestion(qestionRequest, questionId));
+		return ResponseEntity.ok().body(pollService.editQuestion(qestionRequest, pollId, questionQueueId));
 	}
 
 	/**
@@ -152,12 +157,14 @@ public class PollController {
 	 * @param id
 	 * @return
 	 */
-	@DeleteMapping("/questions/{questionId}/delete")
+	@DeleteMapping("/{pollId}/question/{questionQueueId}/delete")
 	@PreAuthorize("hasRole('ADMIN')")
 	//@ApiOperation(value = "Получение Items. Формат ответа зависить от роли")
-	public ResponseEntity deleteQuestion(@PathVariable(value = "questionId") Long questionId) {
-		pollService.deleteQuestion(questionId);
-		return ResponseEntity.ok(new ApiResponse(true, "Question " + questionId + " был удален"));
+	public ResponseEntity deleteQuestion(
+		@PathVariable(value = "pollId") Long pollId,
+		@PathVariable(value = "questionQueueId") int questionQueueId) {
+		pollService.deleteQuestion(pollId, questionQueueId);
+		return ResponseEntity.ok(new ApiResponse(true, "Question " + questionQueueId + " был удален"));
 	}
 
 

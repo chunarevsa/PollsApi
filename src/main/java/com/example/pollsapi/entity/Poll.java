@@ -1,6 +1,9 @@
 package com.example.pollsapi.entity;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -33,7 +36,7 @@ public class Poll extends DateAudit {
 
 	@OneToMany (cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "POLL_ID")
-	private Set<Question> questions = new HashSet<>();
+	private Set<Question> questions = new LinkedHashSet<>();
 
 	public Poll() {
 		super();
