@@ -1,5 +1,6 @@
 package com.example.pollsapi.payload;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.example.pollsapi.entity.Answer;
@@ -10,7 +11,7 @@ public class QuestionRequest {
 	private String text;
 	private Boolean active;
 	private QuestionType questionType;
-	private Set<Answer> answers;
+	private Set<Answer> answers = new LinkedHashSet<>();
 
 	public QuestionRequest() {
 	}

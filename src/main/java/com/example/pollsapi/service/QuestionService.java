@@ -110,7 +110,7 @@ public class QuestionService implements DeleteInterface, QuestionServiceInterfac
 		questions.forEach(question -> saveQuestion(question));
 	}
 
-	private Question saveQuestion(Question question) {
+	public Question saveQuestion(Question question) {
 		return questionRepository.save(question);
 	}
 	

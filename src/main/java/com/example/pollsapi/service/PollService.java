@@ -6,11 +6,13 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.example.pollsapi.entity.Answer;
 import com.example.pollsapi.entity.CompletedPoll;
@@ -25,6 +27,7 @@ import com.example.pollsapi.payload.QuestionRequest;
 import com.example.pollsapi.repository.AnswerRepository;
 import com.example.pollsapi.repository.CompletedPollRepository;
 import com.example.pollsapi.repository.PollRepository;
+import com.example.pollsapi.repository.UserAnswersRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,16 +41,19 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 	private final QuestionService questionService;
 	private final AnswerRepository answerRepository;
 	private final CompletedPollRepository completedPollRepository;
+	private final UserAnswersRepository userAnswersRepository;
 
 	@Autowired
 	public PollService(PollRepository pollRepository, 
 							QuestionService questionService,
 							AnswerRepository answerRepository,
-							CompletedPollRepository completedPollRepository) {
+							CompletedPollRepository completedPollRepository,
+							UserAnswersRepository userAnswersRepository) {
 		this.pollRepository = pollRepository;
 		this.questionService = questionService;
 		this.answerRepository = answerRepository;
 		this.completedPollRepository = completedPollRepository;
+		this.userAnswersRepository = userAnswersRepository;
 	}
 
 	// только активных по дате и из актив
@@ -77,103 +83,159 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 		// Провкрка проходил ли данный юзер опросы
 		// проверка не проходил ли уже этот юзер этот опрос
 		Poll poll = findById(pollId);
-		CompletedPoll completedPoll = new CompletedPoll(poll);
 
 		System.out.println("Старт опроса :" + pollId);
-		Set<Question> questions = completedPoll.getQuestions();
-		Set<Question> newSetQuestion = questions;
+		Set<Question> pollQuestions = poll.getQuestions();
+		Set<Question> completedQuestions = new LinkedHashSet<>();
 
-		Scanner in = new Scanner(System.in);
+		CompletedPoll completedPoll = new CompletedPoll();
+		System.err.println("0");
+		completedPoll.setName(poll.getName());
+		completedPoll.setActive(poll.getActive());
+		completedPoll.setDescription(poll.getDescription());
+		completedPoll.setExpirationDate(poll.getExpirationDate()); 
+		
+		Scanner in1 = new Scanner(System.in);
 		Scanner in2 = new Scanner(System.in);
+		Scanner in3 = new Scanner(System.in);
 
-		for (Question question: questions) {
-			System.out.println(question.getBody());
-			QuestionType questionType = question.getQuestionType();
+		Iterator<Question> iterator = pollQuestions.iterator();
+
+		while (iterator.hasNext()) {
+			
+			System.err.println("1");
+			Question pollQuestion = iterator.next();
+			Set<Answer> pollAnswers = pollQuestion.getAnswers();
+			QuestionType questionType = pollQuestion.getQuestionType();
+
+			System.err.println("2");
+			Question completedQuestion = new Question();
+			completedQuestion.setBody(pollQuestion.getBody());
+			completedQuestion.setActive(pollQuestion.getActive());
+			completedQuestion.setQuestionType(questionType);
+			Set<Answer> completedAnswers = new HashSet<>();
+
+			System.out.println(pollQuestion.getBody());
+
 
 			switch (questionType) {
 				case TEXT_ANSWER:
 					System.out.println("Введи ваш ответ: ");
-					String userAnswer = in2.nextLine();
+					String userAnswer = in1.nextLine();
+					System.err.println("3");
 
 					Answer newAnswer = new Answer();
+					System.err.println("4");
 					newAnswer.setText(userAnswer);
-					answerRepository.save(newAnswer);
-					question.getAnswers().add(newAnswer);
 
-					break;
-				
+					completedAnswers.add(newAnswer);
+					//Answer saveAnswer = answerRepository.save(newAnswer);
+					System.err.println("5");
+					//question.getAnswers().add(saveAnswer);
+					completedQuestion.setAnswers(completedAnswers);
+					
+						break;
 				case ONE_ANSWER:
-					
-					Set<Answer> answers = question.getAnswers();
 
-					Map<Integer, String> map = outPutAnswers(answers);
-					
-
+					System.err.println("6");
+					Map<Integer, String> map = outPutAnswers(pollAnswers);
+					System.err.println("7");
 					System.out.println("Введите номер ответа :");
-					int userNumber = in.nextInt();
-
+					int userNumber = in2.nextInt();
+					System.err.println("8");
+					
 					if (!map.containsKey(userNumber)) {
 						throw new ResourceNotFoundException("Ответ", "номером", userNumber);
 					}
 
 					String userAnswerFromMap = map.get(userNumber);
-					Answer answerFromPoll = answers.stream().filter(answer -> answer.getText().equalsIgnoreCase(userAnswerFromMap))
-							.findAny().orElseThrow(); //TODO: искл
-					Set<Answer> newSetAnswer = new HashSet<>();
-					newSetAnswer.add(answerFromPoll);
-					question.setAnswers(newSetAnswer);
-					break;
+					System.err.println("9");
 
+					Answer answerFromPoll = pollAnswers.stream().filter(answer -> answer.getText().equalsIgnoreCase(userAnswerFromMap))
+							.findAny().orElseThrow(); //TODO: искл
+					
+					System.err.println("10");
+
+					completedAnswers.add(answerFromPoll);
+					System.err.println("11");
+					completedQuestion.setAnswers(completedAnswers);
+					
+					System.err.println("12");
+					break;
 				case MANY_ANSWER:
 
-					Set<Answer> setAnswers = question.getAnswers();
-					Map<Integer, String> mapAnswers = outPutAnswers(setAnswers);
-					
+					System.err.println("13");
+					Map<Integer, String> mapAnswers = outPutAnswers(pollAnswers);
 					System.out.println("Введите номера ответов через запятую без пробела:");
 					System.out.println("Пример :1,3,4");
-					String userAnswers = in2.nextLine();
+					String userAnswers = in3.nextLine();
+					System.err.println("14");
 					String [] input = userAnswers.split(",");
-					Set<Answer> newUserSetAnswer = new HashSet<>();
+					System.err.println("15");
+					System.err.println("16");
 
 					for (int i = 0; i < input.length; i++) {
 						int parseInt = Integer.parseInt(input[i]);
 						if (!mapAnswers.containsKey(parseInt)) {
 							throw new ResourceNotFoundException("Ответ", "номером", parseInt);
 						}
+						System.err.println("17");
 						String answerFromMap = mapAnswers.get(parseInt);
-						Answer answerPoll = setAnswers.stream().filter(answer -> answer.getText().equalsIgnoreCase(answerFromMap))
+						System.err.println("18");
+						Answer answerPoll = pollAnswers.stream().filter(answer -> answer.getText().equalsIgnoreCase(answerFromMap))
 							.findAny().orElseThrow(); //TODO: искл
-						newUserSetAnswer.add(answerPoll);
+							System.err.println("19");
+
+						completedAnswers.add(answerPoll);
+
+						System.err.println("20");
 					}
-					question.setAnswers(newUserSetAnswer);
+					completedQuestion.setAnswers(completedAnswers);
+
+					System.err.println("21");
 					break;
 
-			}
-			System.err.println("1");
-			Question newQuestion = new Question(question);
-			newQuestion.setPoll(completedPoll);
-			System.err.println("2");
-			newSetQuestion.add(newQuestion);
-			System.err.println("3");
+			} // swith
+
+			System.err.println("22");
+			completedQuestion.getAnswers().stream()
+						.map(answer -> answerRepository.save(answer)).collect(Collectors.toSet());
+			System.err.println("23");
+			completedQuestions.add(completedQuestion);
+			System.err.println("24");
+			
 
 		}
-		in.close();
-		in2.close();
+		
 
-		System.err.println("4");
-		questionService.saveQuestions(newSetQuestion);
-		System.err.println("5");
-		CompletedPoll savedCompletedPoll = saveCopletedPoll(completedPoll);
-		System.err.println("6");
-
+		System.err.println("25");
+		completedPoll.setQuestions(completedQuestions);
+		System.err.println("26");
+		questionService.saveQuestions(completedPoll.getQuestions());
+		System.err.println("27");
 		UserAnswers newUserCompletedPoll = new UserAnswers();
-		System.err.println("7");
 		newUserCompletedPoll.setUserId(userId);
-		System.err.println("8");
-		newUserCompletedPoll.getCompletedPolls().add(savedCompletedPoll);
-		System.err.println("9");
+		Set<CompletedPoll> set = newUserCompletedPoll.getCompletedPolls();
+		set.add(completedPoll);
+		newUserCompletedPoll.setCompletedPolls(set);
+		System.err.println("28");
+		CompletedPoll savedCompletedPoll = saveCopletedPoll(completedPoll);
+		System.err.println("29");
+		userAnswersRepository.save(newUserCompletedPoll);
+		System.err.println("30");
+	
+		System.err.println("32");
+		
+		System.err.println("33");
 
-		return null;
+		
+		System.err.println("34");
+	
+		System.err.println("35");
+
+		System.err.println("36");
+
+		return savedCompletedPoll;
 	}
 
 	

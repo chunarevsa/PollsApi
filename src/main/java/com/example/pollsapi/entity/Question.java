@@ -114,4 +114,18 @@ public class Question {
 		this.answers = answers;
 	}
 
+
+	@Override
+	public String toString() {
+		return "{" +
+			" id='" + getId() + "'" +
+			", body='" + getBody() + "'" +
+			", active='" + isActive() + "'" +
+			", questionType='" + getQuestionType() + "'" +
+			", answers='" + getAnswers() + "'" +
+			", poll='" + getPoll() + "'" +
+			"}";
+	}
+
+
 }
