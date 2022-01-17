@@ -50,8 +50,15 @@ public class Question {
 	public Question() {
 	}
 
-	public Question(Long id, String body, Boolean active, QuestionType questionType, Set<Answer> answers, Poll poll) {
-		this.id = id;
+	public Question(Question question) {
+		this(question.getBody(), 
+			question.getActive(), 
+			question.getQuestionType(), 
+			question.getAnswers(), 
+			question.getPoll());
+	}
+
+	public Question(String body, Boolean active, QuestionType questionType, Set<Answer> answers, Poll poll) {
 		this.body = body;
 		this.active = active;
 		this.questionType = questionType;

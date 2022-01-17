@@ -39,6 +39,22 @@ public class Poll extends DateAudit {
 		super();
 	}
 
+	public Poll(Poll poll) {
+		this.id = poll.id; // TODO: точно ли надо
+		this.name = poll.name;
+		this.description = poll.description;
+		this.active = poll.active;
+		this.questions = poll.questions;
+	}
+
+	public Poll(Long id, String name, String description, Boolean active, Set<Question> questions) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.active = active;
+		this.questions = questions;
+	}
+
 	public Long getId() {
 		return this.id;
 	}

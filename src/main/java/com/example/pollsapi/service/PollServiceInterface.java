@@ -15,6 +15,6 @@ public interface PollServiceInterface {
 
 	public Optional<Poll> editPoll(Long id, PollRequest pollRequest) throws ParseException;
 
-	public Object start(Long userId);
+	public Object start(Long pollId, Long userId);
 
 }

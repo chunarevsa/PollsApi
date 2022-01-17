@@ -5,12 +5,14 @@ create table answer (
   primary key (answer_id)
 ) engine = InnoDB;
 create table poll (
+  dtype varchar(31) not null,
   poll_id bigint not null auto_increment,
   created datetime,
   expiration_date datetime,
   is_active bit not null,
   description varchar(255),
   name varchar(255) not null,
+  user_answers_id bigint,
   primary key (poll_id)
 ) engine = InnoDB;
 create table question (
@@ -33,22 +35,50 @@ create table user (
   username varchar(255) not null,
   primary key (user_id)
 ) engine = InnoDB;
+create table user_answers (
+  user_answers_id bigint not null auto_increment,
+  user_id bigint,
+  primary key (user_answers_id)
+) engine = InnoDB;
 create table user_authority (
   user_id bigint not null,
   role_id bigint not null,
   primary key (user_id, role_id)
 ) engine = InnoDB;
 create table user_seq (next_val bigint) engine = InnoDB;
-insert into user_seq values (1);
-alter table role add
+insert into
+  user_seq
+values
+  (1);
+alter table
+  role
+add
   constraint UK_epk9im9l9q67xmwi4hbed25do unique (role_name);
-alter table user add
+alter table
+  user
+add
   constraint UK_sb8bbouer5wak8vyiiy4pf2bx unique (username);
-alter table answer add
+alter table
+  user_answers
+add
+  constraint UK_rtqepsbomha9yib22aurqs9ti unique (user_id);
+alter table
+  answer
+add
   constraint FK8frr4bcabmmeyyu60qt7iiblo foreign key (question_id) references question (question_id);
-alter table question add
+alter table
+  poll
+add
+  constraint FKht4mtitxtyqhntg5pye20fb1o foreign key (user_answers_id) references user_answers (user_answers_id);
+alter table
+  question
+add
   constraint FKs9uu0i9ipek2tnqty4ohdek27 foreign key (poll_id) references poll (poll_id);
-alter table user_authority add
+alter table
+  user_authority
+add
   constraint FKash3fy9hdayq3o73fir11n3th foreign key (role_id) references role (role_id);
-alter table user_authority add
+alter table
+  user_authority
+add
   constraint FKpqlsjpkybgos9w2svcri7j8xy foreign key (user_id) references user (user_id);

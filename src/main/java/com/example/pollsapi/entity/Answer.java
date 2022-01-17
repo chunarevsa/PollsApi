@@ -24,8 +24,6 @@ public class Answer {
 	@Column(name = "TEXT", nullable = false)
 	private String text;
 
-	// TODO: Добавить актив
-
 	@JsonIgnore
 	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn (name = "QUESTION_ID", insertable = false, updatable = false)

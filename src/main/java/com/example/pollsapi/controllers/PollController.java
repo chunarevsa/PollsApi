@@ -68,9 +68,10 @@ public class PollController {
 	 */
 	@PostMapping("/{pollid}/start")
 	//@ApiOperation(value = "Добавление Item")
-	public ResponseEntity start(@Valid @RequestBody StartPollRequest startPollRequest) {
+	public ResponseEntity start(@PathVariable(value = "pollid") Long poleId, 
+			@Valid @RequestBody StartPollRequest startPollRequest) {
 
-		return ResponseEntity.ok().body(pollService.start(startPollRequest.getUserId()));
+		return ResponseEntity.ok().body(pollService.start(poleId ,startPollRequest.getUserId()));
 	}
 
 	/**

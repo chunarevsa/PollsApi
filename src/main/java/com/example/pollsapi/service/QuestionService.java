@@ -45,7 +45,7 @@ public class QuestionService implements DeleteInterface, QuestionServiceInterfac
 		Set<Answer> answers = questionRequest.getAnswers();
 		switch (questionType) {
 			case TEXT_ANSWER:
-				if (!answers.isEmpty()) {
+				if (answers != null) {
 					throw new InvalidQuestionException("Вопрос", "", questionType);
 				}
 				break;
