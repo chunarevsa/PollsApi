@@ -15,17 +15,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.example.pollsapi.entity.Answer;
-import com.example.pollsapi.entity.CompletedPoll;
 import com.example.pollsapi.entity.Poll;
 import com.example.pollsapi.entity.Question;
 import com.example.pollsapi.entity.QuestionType;
-import com.example.pollsapi.entity.UserAnswers;
 import com.example.pollsapi.exception.FinalDateException;
 import com.example.pollsapi.exception.ResourceNotFoundException;
 import com.example.pollsapi.payload.PollRequest;
 import com.example.pollsapi.payload.QuestionRequest;
 import com.example.pollsapi.repository.AnswerRepository;
-import com.example.pollsapi.repository.CompletedPollRepository;
 import com.example.pollsapi.repository.PollRepository;
 import com.example.pollsapi.repository.UserAnswersRepository;
 
@@ -40,19 +37,16 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 	private final PollRepository pollRepository;
 	private final QuestionService questionService;
 	private final AnswerRepository answerRepository;
-	private final CompletedPollRepository completedPollRepository;
 	private final UserAnswersRepository userAnswersRepository;
 
 	@Autowired
 	public PollService(PollRepository pollRepository, 
 							QuestionService questionService,
 							AnswerRepository answerRepository,
-							CompletedPollRepository completedPollRepository,
 							UserAnswersRepository userAnswersRepository) {
 		this.pollRepository = pollRepository;
 		this.questionService = questionService;
 		this.answerRepository = answerRepository;
-		this.completedPollRepository = completedPollRepository;
 		this.userAnswersRepository = userAnswersRepository;
 	}
 
@@ -79,9 +73,8 @@ public class PollService implements DeleteInterface, PollServiceInterface {
  */
 
 	@Override
-	public Object start(Long pollId, Long userId) {
-		// Провкрка проходил ли данный юзер опросы
-		// проверка не проходил ли уже этот юзер этот опрос
+	public Object start(Long pollId, Long userId) {/* 
+	
 		Poll poll = findById(pollId);
 
 		System.out.println("Старт опроса :" + pollId);
@@ -129,9 +122,8 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 					newAnswer.setText(userAnswer);
 
 					completedAnswers.add(newAnswer);
-					//Answer saveAnswer = answerRepository.save(newAnswer);
 					System.err.println("5");
-					//question.getAnswers().add(saveAnswer);
+
 					completedQuestion.setAnswers(completedAnswers);
 					
 						break;
@@ -152,7 +144,7 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 					System.err.println("9");
 
 					Answer answerFromPoll = pollAnswers.stream().filter(answer -> answer.getText().equalsIgnoreCase(userAnswerFromMap))
-							.findAny().orElseThrow(); //TODO: искл
+							.findAny().orElseThrow(); 
 					
 					System.err.println("10");
 
@@ -233,9 +225,9 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 	
 		System.err.println("35");
 
-		System.err.println("36");
+		System.err.println("36"); */
 
-		return savedCompletedPoll;
+		return null;
 	}
 
 	
@@ -345,9 +337,5 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 	private Poll savePoll(Poll poll) {
 		return pollRepository.save(poll);
 	}
-
-	private CompletedPoll saveCopletedPoll(CompletedPoll completedPoll) {
-		return completedPollRepository.save(completedPoll);
-	}	
 
 }

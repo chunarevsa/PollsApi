@@ -1,9 +1,9 @@
 package com.example.pollsapi.repository;
 
-import com.example.pollsapi.entity.UserAnswers;
+import com.example.pollsapi.entity.UserPollAnswers;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserAnswersRepository extends JpaRepository<UserAnswers, Long>  {
+public interface UserAnswersRepository extends JpaRepository<UserPollAnswers, Long>  {
 	
 }
