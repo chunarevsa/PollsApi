@@ -20,15 +20,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class UserAnswer {
 
 	@Id
-	@Column (name = "USER_ANSWERS_ID")
+	@Column (name = "USER_ANSWER_ID")
 	@GeneratedValue(strategy =  GenerationType.IDENTITY)
 	private Long id;
 
 	@Column (name = "QUESTION_BODY")
 	private String questionBody;
 
-	@Column (name = "USER_ANSWER")
-	private String userAnswer;
+	@Column (name = "USER_ANSWER_BODY")
+	private String userAnswerBody;
 
 	@OneToOne(cascade = CascadeType.ALL, optional = false)
    @PrimaryKeyJoinColumn(name = "question_id", referencedColumnName = "id")
@@ -37,21 +37,25 @@ public class UserAnswer {
 	@JsonIgnore
 	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn (name = "USER_ANSWERS_ID", insertable = false, updatable = false)
-	private UserPollAnswers userAnswers;
+	private UserPollAnswers userPollAnswers;
 
 	public UserAnswer() {
 	}
 
-	public UserAnswer(Long id, String questionBody, String userAnswer, Question question, UserPollAnswers userAnswers) {
+	public UserAnswer(Long id, String questionBody, String userAnswerBody, Question question, UserPollAnswers userPollAnswers) {
 		this.id = id;
 		this.questionBody = questionBody;
-		this.userAnswer = userAnswer;
+		this.userAnswerBody = userAnswerBody;
 		this.question = question;
-		this.userAnswers = userAnswers;
+		this.userPollAnswers = userPollAnswers;
 	}
 
 	public Long getId() {
 		return this.id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getQuestionBody() {
@@ -62,12 +66,12 @@ public class UserAnswer {
 		this.questionBody = questionBody;
 	}
 
-	public String getUserAnswer() {
-		return this.userAnswer;
+	public String getUserAnswerBody() {
+		return this.userAnswerBody;
 	}
 
-	public void setUserAnswer(String userAnswer) {
-		this.userAnswer = userAnswer;
+	public void setUserAnswerBody(String userAnswerBody) {
+		this.userAnswerBody = userAnswerBody;
 	}
 
 	public Question getQuestion() {
@@ -78,13 +82,12 @@ public class UserAnswer {
 		this.question = question;
 	}
 
-	public UserPollAnswers getUserAnswers() {
-		return this.userAnswers;
+	public UserPollAnswers getUserPollAnswers() {
+		return this.userPollAnswers;
 	}
 
-	public void setUserAnswers(UserPollAnswers userAnswers) {
-		this.userAnswers = userAnswers;
+	public void setUserPollAnswers(UserPollAnswers userPollAnswers) {
+		this.userPollAnswers = userPollAnswers;
 	}
-
 
 }

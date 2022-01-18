@@ -18,6 +18,7 @@ import com.example.pollsapi.entity.Answer;
 import com.example.pollsapi.entity.Poll;
 import com.example.pollsapi.entity.Question;
 import com.example.pollsapi.entity.QuestionType;
+import com.example.pollsapi.entity.UserAnswer;
 import com.example.pollsapi.exception.FinalDateException;
 import com.example.pollsapi.exception.ResourceNotFoundException;
 import com.example.pollsapi.payload.PollRequest;
@@ -73,44 +74,39 @@ public class PollService implements DeleteInterface, PollServiceInterface {
  */
 
 	@Override
-	public Object start(Long pollId, Long userId) {/* 
+	public Object start(Long pollId, Long userId) {
 	
 		Poll poll = findById(pollId);
 
 		System.out.println("Старт опроса :" + pollId);
 		Set<Question> pollQuestions = poll.getQuestions();
-		Set<Question> completedQuestions = new LinkedHashSet<>();
-
-		CompletedPoll completedPoll = new CompletedPoll();
 		System.err.println("0");
-		completedPoll.setName(poll.getName());
-		completedPoll.setActive(poll.getActive());
-		completedPoll.setDescription(poll.getDescription());
-		completedPoll.setExpirationDate(poll.getExpirationDate()); 
 		
 		Scanner in1 = new Scanner(System.in);
 		Scanner in2 = new Scanner(System.in);
 		Scanner in3 = new Scanner(System.in);
 
-		Iterator<Question> iterator = pollQuestions.iterator();
-
-		while (iterator.hasNext()) {
+		// Цикл вопросов 
+		for (Question pollQuestion: pollQuestions) {
 			
 			System.err.println("1");
-			Question pollQuestion = iterator.next();
+			// Список ответов в вопросе
 			Set<Answer> pollAnswers = pollQuestion.getAnswers();
+			// Тип вороса
 			QuestionType questionType = pollQuestion.getQuestionType();
 
 			System.err.println("2");
-			Question completedQuestion = new Question();
-			completedQuestion.setBody(pollQuestion.getBody());
-			completedQuestion.setActive(pollQuestion.getActive());
-			completedQuestion.setQuestionType(questionType);
-			Set<Answer> completedAnswers = new HashSet<>();
+			UserAnswer userAnswer = new UserAnswer();
+			userAnswer.setQuestion(pollQuestion);
+			userAnswer.setQuestionBody(pollQuestion.getBody());
+			userAnswer.setUserAnswer(userAnswer);
+			userAnswer.setUserAnswers(userAnswers);
 
+
+			// Тело вопроса
 			System.out.println(pollQuestion.getBody());
 
-
+			// Обработка ответов в зависимости от типа
 			switch (questionType) {
 				case TEXT_ANSWER:
 					System.out.println("Введи ваш ответ: ");
@@ -225,7 +221,7 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 	
 		System.err.println("35");
 
-		System.err.println("36"); */
+		System.err.println("36"); 
 
 		return null;
 	}
