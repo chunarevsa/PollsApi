@@ -18,14 +18,14 @@ import com.example.pollsapi.entity.Answer;
 import com.example.pollsapi.entity.Poll;
 import com.example.pollsapi.entity.Question;
 import com.example.pollsapi.entity.QuestionType;
-import com.example.pollsapi.entity.UserAnswer;
+import com.example.pollsapi.entity.UserPolls;
 import com.example.pollsapi.exception.FinalDateException;
 import com.example.pollsapi.exception.ResourceNotFoundException;
 import com.example.pollsapi.payload.PollRequest;
 import com.example.pollsapi.payload.QuestionRequest;
 import com.example.pollsapi.repository.AnswerRepository;
 import com.example.pollsapi.repository.PollRepository;
-import com.example.pollsapi.repository.UserAnswersRepository;
+import com.example.pollsapi.repository.UserPollsRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,17 +38,17 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 	private final PollRepository pollRepository;
 	private final QuestionService questionService;
 	private final AnswerRepository answerRepository;
-	private final UserAnswersRepository userAnswersRepository;
+	private final UserPollsRepository userPollsRepository;
 
 	@Autowired
 	public PollService(PollRepository pollRepository, 
 							QuestionService questionService,
 							AnswerRepository answerRepository,
-							UserAnswersRepository userAnswersRepository) {
+							UserPollsRepository userPollsRepository) {
 		this.pollRepository = pollRepository;
 		this.questionService = questionService;
 		this.answerRepository = answerRepository;
-		this.userAnswersRepository = userAnswersRepository;
+		this.userPollsRepository = userPollsRepository;
 	}
 
 	// только активных по дате и из актив
@@ -74,7 +74,7 @@ public class PollService implements DeleteInterface, PollServiceInterface {
  */
 
 	@Override
-	public Object start(Long pollId, Long userId) {
+	public Object start(Long pollId, Long userUniqueId) {
 	
 		Poll poll = findById(pollId);
 
@@ -82,6 +82,12 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 		Set<Question> pollQuestions = poll.getQuestions();
 		System.err.println("0");
 		
+		UserPolls userPolls = findUserPolls(userUniqueId);
+		if (userPolls == null) {
+			userPolls = new UserPolls();
+			userPolls.setUserUniqueId(userUniqueId);
+		}
+
 		Scanner in1 = new Scanner(System.in);
 		Scanner in2 = new Scanner(System.in);
 		Scanner in3 = new Scanner(System.in);
@@ -227,6 +233,10 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 	}
 
 	
+
+	private UserPolls findUserPolls(Long userUniqueId) {
+		return userPollsRepository
+	}
 
 	private Map<Integer, String> outPutAnswers(Set<Answer> answers) {
 		

@@ -51,8 +51,7 @@ public class User {
 					String username, 
 					String password, 
 					Boolean active, 
-					Set<Role> roles,
-					UserPolls userPOlls) {
+					Set<Role> roles) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
