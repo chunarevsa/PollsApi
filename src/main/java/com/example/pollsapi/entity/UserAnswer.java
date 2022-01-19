@@ -29,7 +29,7 @@ public class UserAnswer {
 	private String userAnswerBody;
 
 	@OneToOne
-	@JoinColumn(name = "question_id", referencedColumnName = "question_id")
+	@JoinColumn(name = "QUESTION_ID", referencedColumnName = "QUESTION_ID")
 	private Question question; 
 
 	@JsonIgnore
@@ -78,5 +78,15 @@ public class UserAnswer {
 	public void setUserPollAnswers(UserPollAnswers userPollAnswers) {
 		this.userPollAnswers = userPollAnswers;
 	}
+
+
+	public Question getQuestion() {
+		return this.question;
+	}
+
+	public void setQuestion(Question question) {
+		this.question = question;
+	}
+
 
 }

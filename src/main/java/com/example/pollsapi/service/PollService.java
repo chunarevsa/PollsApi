@@ -48,6 +48,7 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 	private final UserPollsRepository userPollsRepository;
 	private final UserAnswerRepository userAnswerRepository;
 	private final UserPollAnswersRepository userPollAnswersRepository;
+	private final TakePollService takePollService;
 
 	@Autowired
 	public PollService(PollRepository pollRepository, 
@@ -55,13 +56,15 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 							AnswerRepository answerRepository,
 							UserPollsRepository userPollsRepository,
 							UserAnswerRepository userAnswerRepository,
-							UserPollAnswersRepository userPollAnswersRepository) {
+							UserPollAnswersRepository userPollAnswersRepository,
+							TakePollService takePollService) {
 		this.pollRepository = pollRepository;
 		this.questionService = questionService;
 		this.answerRepository = answerRepository;
 		this.userPollsRepository = userPollsRepository;
 		this.userAnswerRepository = userAnswerRepository;
 		this.userPollAnswersRepository = userPollAnswersRepository;
+		this.takePollService = takePollService;
 	}
 
 	// только активных по дате и из актив
@@ -71,21 +74,6 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 		return pollRepository.findAll();
 	}
 
-	/**
- *
-- добавление/изменение/удаление вопросов в опросе. 
-Атрибуты вопросов: текст вопроса, тип вопроса 
-(ответ текстом, ответ с выбором одного варианта, 
-ответ с выбором нескольких вариантов)
-
-- получение списка активных опросов
-- прохождение опроса: опросы можно проходить анонимно, 
-в качестве идентификатора пользователя в API передаётся числовой ID, 
-по которому сохраняются ответы пользователя на вопросы; 
-один пользователь может участвовать в любом количестве опросов
-	 *
- */
-
 	@Override
 	public Object start(Long pollId, Long userUniqueId) {
 	
@@ -93,10 +81,9 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 
 		System.out.println("Старт опроса :" + pollId);
 		Set<Question> pollQuestions = poll.getQuestions();
-		System.err.println("0");
 		
+		// Проверка на то, не проходил ли пользовательэто опрос 
 		UserPolls userPolls = findUserPollsByUserUniqueId(userUniqueId);
-		
 		if (userPolls == null) {
 			userPolls = new UserPolls();
 			userPolls.setUserUniqueId(userUniqueId);
@@ -110,171 +97,28 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 		if (find != null) {
 			throw new AlreadyUseException("Poll", "id", pollId);
 		}
+	
+		UserPollAnswers userPollAnswers = takePollService.getUserPollAnswers(pollQuestions);
 
-		UserPollAnswers userPollAnswers = new UserPollAnswers();
-
-		Scanner in1 = new Scanner(System.in);
-		Scanner in2 = new Scanner(System.in);
-		Scanner in3 = new Scanner(System.in); 
-
-		// Цикл вопросов 
-		for (Question pollQuestion: pollQuestions) {
-			
-			System.err.println("1");
-			// Список ответов в вопросе
-			Set<Answer> pollAnswers = pollQuestion.getAnswers();
-			// Тип вороса
-			QuestionType questionType = pollQuestion.getQuestionType();
-
-			System.err.println("2");
-			
-			// Создание ответов пользователя
-			UserAnswer userAnswer = new UserAnswer();
-			
-			userAnswer.setQuestionBody(pollQuestion.getBody());
-
-			// Тело вопроса
-			System.out.println(pollQuestion.getBody());
-
-			// Обработка ответов в зависимости от типа
-			switch (questionType) {
-				case TEXT_ANSWER:
-					System.out.println("Введи ваш ответ: ");
-					String userAnswerBody = in1.nextLine();
-					System.err.println("3");
-
-					userAnswer.setUserAnswerBody(userAnswerBody);
-
-					System.err.println("4");
-					System.err.println("5");
-					
-						break;
-				case ONE_ANSWER:
-
-					System.err.println("6");
-					/* Map<Integer, String> map = outPutAnswers(pollAnswers);
-					System.err.println("7");
-					System.out.println("Введите номер ответа :");
-					int userNumber = in2.nextInt();
-					System.err.println("8");
-					
-					if (!map.containsKey(userNumber)) {
-						throw new ResourceNotFoundException("Ответ", "номером", userNumber);
-					}
-
-					String userAnswerFromMap = map.get(userNumber);
-					System.err.println("9");
-
-					Answer answerFromPoll = pollAnswers.stream().filter(answer -> answer.getText().equalsIgnoreCase(userAnswerFromMap))
-							.findAny().orElseThrow(); 
-					
-					System.err.println("10");
-
-					completedAnswers.add(answerFromPoll);
-					System.err.println("11");
-					completedQuestion.setAnswers(completedAnswers);
-					
-					System.err.println("12"); */
-					break;
-				case MANY_ANSWER:
-
-					System.err.println("13");
-					/* Map<Integer, String> mapAnswers = outPutAnswers(pollAnswers);
-					System.out.println("Введите номера ответов через запятую без пробела:");
-					System.out.println("Пример :1,3,4");
-					String userAnswers = in3.nextLine();
-					System.err.println("14");
-					String [] input = userAnswers.split(",");
-					System.err.println("15");
-					System.err.println("16");
-
-					for (int i = 0; i < input.length; i++) {
-						int parseInt = Integer.parseInt(input[i]);
-						if (!mapAnswers.containsKey(parseInt)) {
-							throw new ResourceNotFoundException("Ответ", "номером", parseInt);
-						}
-						System.err.println("17");
-						String answerFromMap = mapAnswers.get(parseInt);
-						System.err.println("18");
-						Answer answerPoll = pollAnswers.stream().filter(answer -> answer.getText().equalsIgnoreCase(answerFromMap))
-							.findAny().orElseThrow(); //TODO: искл
-							System.err.println("19");
-
-						completedAnswers.add(answerPoll);
-
-						System.err.println("20");
-					}
-					completedQuestion.setAnswers(completedAnswers); */
-
-					System.err.println("21");
-					break;
-
-			} // swith
-
-			// Добавляем ответ пользователя по этому вопросу
-			userPollAnswers.getUserAnswers().add(userAnswer);
-			System.err.println("22");
-			
-
-		} // for question
-
-		System.err.println("ТУТ");
+		// Сохранение ответов пользователя
+		userPollAnswers.setPoll(poll);
 		userPollAnswers.getUserAnswers().stream()
 				.map(saveUserAnswer1 -> saveUserAnswer(saveUserAnswer1))
 				.collect(Collectors.toSet());
 
-		System.err.println("23");
-		userPollAnswers.setPoll(poll);
-		
-		System.err.println("24");
+		// Сохранение пройденого опроса
 		userPolls.getUserPollAnswers().add(userPollAnswers);
-
-		System.err.println("25");
 		userPolls.getUserPollAnswers().stream()
 				.map(saveUserPollAnswers -> saveUserPollAnswers(saveUserPollAnswers))
 				.collect(Collectors.toSet());
 
-		System.err.println("26");
-		UserPolls savedUserPolls = saveUserPolls(userPolls);
-
-		System.err.println("27"); 
-
-		return savedUserPolls;
+		return saveUserPolls(userPolls);
 	}
 
-	
-	private UserAnswer saveUserAnswer(UserAnswer saveUserAnswer1) {
-		return userAnswerRepository.save(saveUserAnswer1);
-	}
-
-	private UserPolls saveUserPolls(UserPolls userPolls) {
-		return userPollsRepository.save(userPolls);
-	}
-
-	private UserPolls findUserPollsByUserUniqueId(Long userUniqueId) {
-		return userPollsRepository.findUserPollsByUserUniqueId(userUniqueId);
-	}
-
-	private Map<Integer, String> outPutAnswers(Set<Answer> answers) {
-		
-		Iterator<Answer> iterator = answers.iterator();
-		Map<Integer, String> map = new HashMap<>();
-
-		int i = 1;
-		while (iterator.hasNext()) {
-			String textAnswer = iterator.next().getText();
-			map.put(i, textAnswer);
-			System.out.println(i + ": " + textAnswer);
-			i++;
-		}
-		return map;
-
-	} 
 
 	@Override
 	public Optional<Poll> addPoll(PollRequest pollRequest) throws ParseException  {
 
-		
 		Instant expirationDate = getInstantDate(pollRequest.getExpirationDate());
 		
 		if (validateExpirationDate(expirationDate)) {
@@ -353,6 +197,10 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 		return pollRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Poll", "id", id));
 	}
 
+	private UserPolls findUserPollsByUserUniqueId(Long userUniqueId) {
+		return userPollsRepository.findUserPollsByUserUniqueId(userUniqueId);
+	}
+
 	private boolean validateExpirationDate(Instant expirationDate) {
 		return expirationDate.isBefore(Instant.now());
 	}
@@ -361,10 +209,16 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 		return pollRepository.save(poll);
 	}
 
-	
+	private UserPolls saveUserPolls(UserPolls userPolls) {
+		return userPollsRepository.save(userPolls);
+	}
 
 	private UserPollAnswers saveUserPollAnswers(UserPollAnswers userPollAnswers) {
 		return userPollAnswersRepository.save(userPollAnswers);
+	}
+
+	private UserAnswer saveUserAnswer(UserAnswer saveUserAnswer1) {
+		return userAnswerRepository.save(saveUserAnswer1);
 	}
 
 }
