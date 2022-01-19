@@ -77,10 +77,6 @@ public class UserPollAnswers {
 		return this.finalDate;
 	}
 
-	public void setFinalDate(Instant finalDate) {
-		this.finalDate = finalDate;
-	}
-
 	public Set<UserAnswer> getUserAnswers() {
 		return this.userAnswers;
 	}

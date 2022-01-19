@@ -14,11 +14,15 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.validation.constraints.Null;
+
 import com.example.pollsapi.entity.Answer;
 import com.example.pollsapi.entity.Poll;
 import com.example.pollsapi.entity.Question;
 import com.example.pollsapi.entity.QuestionType;
+import com.example.pollsapi.entity.UserPollAnswers;
 import com.example.pollsapi.entity.UserPolls;
+import com.example.pollsapi.exception.AlreadyUseException;
 import com.example.pollsapi.exception.FinalDateException;
 import com.example.pollsapi.exception.ResourceNotFoundException;
 import com.example.pollsapi.payload.PollRequest;
@@ -83,10 +87,26 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 		System.err.println("0");
 		
 		UserPolls userPolls = findUserPolls(userUniqueId);
+		
 		if (userPolls == null) {
 			userPolls = new UserPolls();
 			userPolls.setUserUniqueId(userUniqueId);
+		} 
+
+		Set<UserPollAnswers> setUserPollAnswers = userPolls.getUserPollAnswers();
+
+		// проврка на проходил ли уже этот опрос 
+		UserPollAnswers find = setUserPollAnswers.stream()
+				.filter(userPollAnswers1 -> pollId.equals(userPollAnswers1.getPoll().getId()))
+				.findAny().orElse(null);
+		
+		if (find != null) {
+			throw new AlreadyUseException("Poll", "id", pollId);
 		}
+
+		UserPollAnswers userPollAnswers = new UserPollAnswers();
+		userPollAnswers.setPoll(poll);
+		userPollAnswers.set
 
 		Scanner in1 = new Scanner(System.in);
 		Scanner in2 = new Scanner(System.in);
