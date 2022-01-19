@@ -8,7 +8,7 @@ import com.example.pollsapi.entity.QuestionType;
 
 public class QuestionRequest {
 
-	private String text;
+	private String body;
 	private Boolean active;
 	private QuestionType questionType;
 	private Set<Answer> answers = new LinkedHashSet<>();
@@ -16,19 +16,19 @@ public class QuestionRequest {
 	public QuestionRequest() {
 	}
 
-	public QuestionRequest(String text, Boolean active, QuestionType questionType, Set<Answer> answers) {
-		this.text = text;
+	public QuestionRequest(String body, Boolean active, QuestionType questionType, Set<Answer> answers) {
+		this.body = body;
 		this.active = active;
 		this.questionType = questionType;
 		this.answers = answers;
 	}
 
-	public String getText() {
-		return this.text;
+	public String getBody() {
+		return this.body;
 	}
 
-	public void setText(String text) {
-		this.text = text;
+	public void setBody(String body) {
+		this.body = body;
 	}
 
 	public Boolean isActive() {

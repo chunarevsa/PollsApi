@@ -130,7 +130,7 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 			
 			// Создание ответов пользователя
 			UserAnswer userAnswer = new UserAnswer();
-			userAnswer.setQuestion(pollQuestion);
+			
 			userAnswer.setQuestionBody(pollQuestion.getBody());
 
 			// Тело вопроса
@@ -215,33 +215,37 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 			userPollAnswers.getUserAnswers().add(userAnswer);
 			System.err.println("22");
 			
-			System.err.println("23");
-
-			System.err.println("24");
-			
 
 		} // for question
 
+		System.err.println("ТУТ");
 		userPollAnswers.getUserAnswers().stream()
-				.map(saveAnswer -> saveAnswer(saveAnswer))
+				.map(saveUserAnswer1 -> saveUserAnswer(saveUserAnswer1))
 				.collect(Collectors.toSet());
-		
+
+		System.err.println("23");
 		userPollAnswers.setPoll(poll);
 		
+		System.err.println("24");
 		userPolls.getUserPollAnswers().add(userPollAnswers);
 
+		System.err.println("25");
 		userPolls.getUserPollAnswers().stream()
 				.map(saveUserPollAnswers -> saveUserPollAnswers(saveUserPollAnswers))
 				.collect(Collectors.toSet());
 
+		System.err.println("26");
 		UserPolls savedUserPolls = saveUserPolls(userPolls);
 
-		System.err.println("36"); 
+		System.err.println("27"); 
 
 		return savedUserPolls;
 	}
 
 	
+	private UserAnswer saveUserAnswer(UserAnswer saveUserAnswer1) {
+		return userAnswerRepository.save(saveUserAnswer1);
+	}
 
 	private UserPolls saveUserPolls(UserPolls userPolls) {
 		return userPollsRepository.save(userPolls);
@@ -357,9 +361,7 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 		return pollRepository.save(poll);
 	}
 
-	private UserAnswer saveAnswer (UserAnswer userAnswer) {
-		return userAnswerRepository.save(userAnswer);
-	}
+	
 
 	private UserPollAnswers saveUserPollAnswers(UserPollAnswers userPollAnswers) {
 		return userPollAnswersRepository.save(userPollAnswers);

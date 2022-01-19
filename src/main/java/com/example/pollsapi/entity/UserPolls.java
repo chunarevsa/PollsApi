@@ -29,7 +29,7 @@ public class UserPolls {
 	private Long userUniqueId;
 
 	@OneToMany (cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "USER_POLL_ANSWERS_ID")
+	@JoinColumn(name = "USER_POLLS_ID")
 	private Set<UserPollAnswers> userPollAnswers = new HashSet<>();
 
 

@@ -15,7 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -37,24 +36,24 @@ public class UserPollAnswers {
 	@Column (name = "FINAL_DATE", updatable = false)
 	private Instant finalDate;
 
-	@OneToMany (cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "QUESTION_ID")
-	private Set<UserAnswer> userAnswers = new HashSet<>();
-
-	@OneToOne(cascade = CascadeType.ALL, optional = false)
-   @PrimaryKeyJoinColumn(name = "poll_id", referencedColumnName = "id")
+	@OneToOne
+	@JoinColumn(name = "poll_id", referencedColumnName = "poll_id")
 	private  Poll poll;
+
+	@OneToMany (cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "USER_POLL_ANSWERS_ID")
+	private Set<UserAnswer> userAnswers = new HashSet<>();
 
 	public UserPollAnswers() {
 		this.finalDate = Instant.now();
 	}
 
-	public UserPollAnswers(Long id, UserPolls userPoll, Instant finalDate, Set<UserAnswer> userAnswers, Poll poll) {
+	public UserPollAnswers(Long id, Poll poll, UserPolls userPoll, Instant finalDate, Set<UserAnswer> userAnswers) {
 		this.id = id;
+		this.poll = poll;
 		this.userPoll = userPoll;
 		this.finalDate = Instant.now();
 		this.userAnswers = userAnswers;
-		this.poll = poll;
 	}
 
 	public Long getId() {
@@ -63,6 +62,14 @@ public class UserPollAnswers {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Poll getPoll() {
+		return this.poll;
+	}
+
+	public void setPoll(Poll poll) {
+		this.poll = poll;
 	}
 
 	public UserPolls getUserPoll() {
@@ -84,18 +91,5 @@ public class UserPollAnswers {
 	public void setUserAnswers(Set<UserAnswer> userAnswers) {
 		this.userAnswers = userAnswers;
 	}
-
-	public Poll getPoll() {
-		return this.poll;
-	}
-
-	public void setPoll(Poll poll) {
-		this.poll = poll;
-	}
-
-	
-
-
-
 	
 }

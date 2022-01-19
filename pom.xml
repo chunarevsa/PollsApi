@@ -100,13 +100,13 @@
         <artifactId>spring-boot-starter-validation</artifactId>
     	</dependency>
 
-		 <!--Flyway	 -->
+		 <!--Flyway	-->
 		<dependency>
   			<groupId>org.flywaydb</groupId>
   			<artifactId>flyway-core</artifactId>
 			  <version>5.2.4</version>
 		</dependency>
-		  
+		   
 
 
 	</dependencies>

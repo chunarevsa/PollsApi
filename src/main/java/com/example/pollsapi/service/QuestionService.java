@@ -31,7 +31,7 @@ public class QuestionService implements DeleteInterface, QuestionServiceInterfac
 		validateQuestionRequest(questionRequest);
 		
 		Question newQuestion = new Question();
-		newQuestion.setBody(questionRequest.getText());
+		newQuestion.setBody(questionRequest.getBody());
 		newQuestion.setActive(questionRequest.getActive());
 		newQuestion.setQuestionType(questionRequest.getQuestionType());
 		newQuestion.setAnswers(questionRequest.getAnswers());
@@ -43,9 +43,10 @@ public class QuestionService implements DeleteInterface, QuestionServiceInterfac
 
 		QuestionType questionType = questionRequest.getQuestionType();
 		Set<Answer> answers = questionRequest.getAnswers();
+		
 		switch (questionType) {
 			case TEXT_ANSWER:
-				if (answers != null) {
+				if (!answers.isEmpty()) {
 					throw new InvalidQuestionException("Вопрос", "", questionType);
 				}
 				break;
@@ -70,7 +71,7 @@ public class QuestionService implements DeleteInterface, QuestionServiceInterfac
 		
 		Question question = getQuestionFromQueue(questions, questionQueueId);
 
-		question.setBody(questionRequest.getText());
+		question.setBody(questionRequest.getBody());
 		question.setActive(questionRequest.getActive());
 		question.setQuestionType(questionRequest.getQuestionType());//TODO: проверка
 
