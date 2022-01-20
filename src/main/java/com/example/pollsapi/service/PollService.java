@@ -72,6 +72,10 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 	
 		Poll poll = findById(pollId);
 
+		if (validateExpirationDate(poll.getExpirationDate())) {
+			throw new ResourceNotFoundException("Опрос", "active", true);
+		}
+
 		System.out.println("Старт опроса :" + pollId);
 		Set<Question> pollQuestions = poll.getQuestions();
 		

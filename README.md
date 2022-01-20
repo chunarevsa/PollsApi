@@ -13,7 +13,6 @@
 - Выдача исключений при ошибках
 - Миграция баз данных с помощью Flayway
 - Запуск MYSQL сервера и проекта с помощью Docker
-- Документация Swagger Docs
 
 ---
 
@@ -97,12 +96,6 @@ cd PollsApi
 
 ---
 
-## Документация Swagger ##
-
-Документация доступна по адресу:
-
-`http://localhost:8088/swagger-ui.html`
-
 
 ## API ##
 
@@ -139,7 +132,7 @@ curl --location --request POST 'localhost:8088/auth/login' \
 ---
 
 
-> <h3> Внутренняя валюта  </h3>
+> <h3> Опросы </h3>
 
 <details>
 <summary> Добавление нового опроса </summary>
@@ -199,311 +192,129 @@ curl --location --request POST 'localhost:8088/poll/1/delete' \
 ---
 
 <details>
-<summary> Получение списка всех опросов </summary>
+<summary> Список всех опросов активных опросов </summary>
 
 ```
-curl --location --request GET 'localhost:8088/currency/all' \
---header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjM5Mjk2NTEwLCJleHAiOjE2NDE4ODg1MTAsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.v-EYaLqelzIn0emvlRPTzg7LIA4-y-Q0zsa9NREAJvTmh38gugeN0WIdbAQMKI10ql87fs9A4EncNeH3WydLdA'
+curl --location --request GET 'localhost:8088/poll/all' \
 
 ```
 
-* Разное предоставление информации в зависимости от роли (ADMIN, USER)
-* `USER` - Получение списка активных валют. Выдаётся исключение, если таких нет
-* `ADMIN` - Получение списка всех валют. Выдаётся исключение, если валюты отсутствуют
+* Выдаёт только опросы с `active=true`
+* Отсеивает "просроченные опросы"
 
 </details>
 
 ---
 
 <details>
-<summary> Получение информации о валюте </summary>
+<summary> Список всех опросов </summary>
 
 ```
-curl --location --request GET 'localhost:8088/currency/gold' \
+curl --location --request GET 'localhost:8088/poll/all/admin' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjM5Mjk2NTEwLCJleHAiOjE2NDE4ODg1MTAsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.v-EYaLqelzIn0emvlRPTzg7LIA4-y-Q0zsa9NREAJvTmh38gugeN0WIdbAQMKI10ql87fs9A4EncNeH3WydLdA'
 
-```
 
-* Разное предоставление информации в зависимости от роли (ADMIN, USER)
-* `USER`- Получение краткой информации о валюте. Выдаётся исключение, если она не активна или отсутствует
-* `ADMIN`- Получение расширенной информации о валюте. Выдаётся исключение, если такая валюта отсутствует
+```
 
 </details>
 
 ---
 
-<details>
-<summary> Покупка валюты </summary>
-
-```
-curl --location --request POST 'localhost:8088/currency/buy?title=gold&amount=100' \
---header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjM5Mjk2NTEwLCJleHAiOjE2NDE4ODg1MTAsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.v-EYaLqelzIn0emvlRPTzg7LIA4-y-Q0zsa9NREAJvTmh38gugeN0WIdbAQMKI10ql87fs9A4EncNeH3WydLdA'
-
-```
-
-* Выдаётся исключение, если валюта неактивна или отсутствует
-* Выдаётся исключение, если у пользователя недостаточно средств `$` для покупки указанного количества валюты `amount`
-* Валюта добавлется пользователю в `account`. Если такой валюты у пользователя ещё не было - создаётся новый счёт для валюты
-
-</details>
-
----
-
-> <h3> Товары  </h3>
 
 <details>
-<summary> Добавление нового товара </summary>
+<summary> Прохождение опроса </summary>
 
 ```
-curl --location --request POST 'localhost:8088/item/add' \
+curl --location --request POST 'localhost:8088/poll/1/start' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjM5Mjk2NTEwLCJleHAiOjE2NDE4ODg1MTAsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.v-EYaLqelzIn0emvlRPTzg7LIA4-y-Q0zsa9NREAJvTmh38gugeN0WIdbAQMKI10ql87fs9A4EncNeH3WydLdA' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "name": "Ломик Гордона Фримена",
-    "type": "Weapon",
-    "description": "Cool weapon ",
+    "userId": 33333
+}'
+
+
+```
+
+* Введи свой уникальны индентификатор
+* Один опрос можно проходить один раз
+* Ответы нужно внести в терминале
+* Ответ выдаётся в DTO
+
+</details>
+
+---
+
+> <h3> Вопросы  </h3>
+
+Добавлены три вида вопросов:
+`TEXT_ANSWER` - можно ввести ответ в свободной форме в виде текста
+`ONE_ANSWER` - выбрать один из предложенных
+`MANY_ANSWER` - выбрать несколько из предложенных
+
+<details>
+<summary> Добавление вопроса в опрос </summary>
+
+```
+curl --location --request POST 'localhost:8088/poll/1/question/add' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjM5Mjk2NTEwLCJleHAiOjE2NDE4ODg1MTAsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.v-EYaLqelzIn0emvlRPTzg7LIA4-y-Q0zsa9NREAJvTmh38gugeN0WIdbAQMKI10ql87fs9A4EncNeH3WydLdA' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "body": "Question 1",
+    "questionType": "ONE_ANSWER",
     "active": "true",
-        "prices": [
+        "answers": [
             {
-                "cost": "5",
-                "currency": "gold",
-                "active": "true"
+                "text": "answer 1"
             },
             {
-                "cost": "50",
-                "currency": "silver",
-                "active": "true"
+                "text": "answer 2"
             }
                     ]
 }'
+
 ```
 
-* Доступно только `ADMIN`
-* Товар создаётся, как минимум, с одной ценой во внутренней валюте
-* У товара может быть только одна цена в одной валюте 
-* Выдаётся исключение, если цена указана в отсутствующей валюте 
-* Выдаётся исключение, если цены и товары введены некорректно 
+* Если типа вопроса `TEXT_ANSWER` `answers` указывать не нужно 
 
 </details>
 
 ---
 
-
 <details>
-<summary> Добавление новой цены товару </summary>
+<summary> Изменение вопроса в опросе </summary>
 
 ```
-curl --location --request POST 'localhost:8088/item/1/prices/add' \
---header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjM5Mjk2NTEwLCJleHAiOjE2NDE4ODg1MTAsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.v-EYaLqelzIn0emvlRPTzg7LIA4-y-Q0zsa9NREAJvTmh38gugeN0WIdbAQMKI10ql87fs9A4EncNeH3WydLdA' \
+curl --location --request POST 'localhost:8088/poll/1/question/1/edit' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjQyNjU5NzAwLCJleHAiOjE2NDUyNTE3MDAsImF1dGhvcml0aWVzIjoiUk9MRV9BRE1JTixST0xFX1VTRVIifQ.UzIP3coQN828R0aEB-SxrwgUIbPQWSOmQwZCYN4dGNFSlhtz8f6u47GYc7xhuyIKBrym8YQeYcZM09baM-npzQ' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "cost": "10",
-    "currency": "silver",
+    "text": "Question number 2",
+    "questionType": "TEXT_ANSWER",
     "active": "true"
 }'
 ```
 
-* Доступно только `ADMIN`
-* Выдаётся исключение, если цена указана в отсутствующей валюте 
-* Выдаётся исключение, если цены введены некорректно 
-* Выдаётся исключение, если у товара уже есть цена в такой валюте 
+* Формат запроса `poll/{pollid}/question/{questionQueueId}/edit`
+
 
 </details>
 
 ---
 
 <details>
-<summary> Изменение товара </summary>
+<summary> Удаление вопроса в опросе </summary>
 
 ```
-curl --location --request POST 'localhost:8088/item/1/edit' \
---header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjM5Mjk2NTEwLCJleHAiOjE2NDE4ODg1MTAsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.v-EYaLqelzIn0emvlRPTzg7LIA4-y-Q0zsa9NREAJvTmh38gugeN0WIdbAQMKI10ql87fs9A4EncNeH3WydLdA' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "name": "Легендарный плащ",
-    "type": "skin",
-    "description": "обычный плащ",
-    "active": "true"
-}'
-```
-
-* Доступно только `ADMIN`
-* Выдаётся исключение, если данные о товаре введены некорректно 
-
-</details>
-
----
-
-<details>
-<summary> Изменение цены товара </summary>
-
-```
-curl --location --request POST 'localhost:8088/item/price/1/edit' \
---header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjM5Mjk2NTEwLCJleHAiOjE2NDE4ODg1MTAsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.v-EYaLqelzIn0emvlRPTzg7LIA4-y-Q0zsa9NREAJvTmh38gugeN0WIdbAQMKI10ql87fs9A4EncNeH3WydLdA' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "cost": "10",
-    "currency": "silver",
-    "active": "true"
-}'
-```
-
-* Доступно только `ADMIN`
-* Выдаётся исключение, если цена указана в отсутствующей валюте 
-* Выдаётся исключение, если данные о цене введены некорректно 
-* Выдаётся исключение, если у товара уже есть цена в такой валюте
-
-</details>
-
----
-
-<details>
-<summary> Удаление товара </summary>
-
-```
-curl --location --request POST 'localhost:8088/item/1/delete' \
+curl --location --request POST 'localhost:8088/poll/1/question/1/delete' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjM5Mjk2NTEwLCJleHAiOjE2NDE4ODg1MTAsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.v-EYaLqelzIn0emvlRPTzg7LIA4-y-Q0zsa9NREAJvTmh38gugeN0WIdbAQMKI10ql87fs9A4EncNeH3WydLdA'
 
 ```
 
 * Доступно только `ADMIN`
-* Выдаётся исключение, если такой товар отсутствует
+* Формат запроса `poll/{pollid}/question/{questionId}/delete`
 
 </details>
 
----
-
-<details>
-<summary> Получение списка всех товаров </summary>
-
-```
-curl --location --request GET 'localhost:8088/item/all' \
---header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjM5Mjk2NTEwLCJleHAiOjE2NDE4ODg1MTAsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.v-EYaLqelzIn0emvlRPTzg7LIA4-y-Q0zsa9NREAJvTmh38gugeN0WIdbAQMKI10ql87fs9A4EncNeH3WydLdA'
-
-```
-
-* Разное предоставление информации в зависимости от роли (ADMIN, USER)
-* `USER` - Получение списка активных товаров. Выдаётся исключение, если таких нет
-* `ADMIN` - Получение списка всех товаров. Выдаётся исключение, если товары отсутствуют
-
-</details>
-
----
-
-<details>
-<summary> Получение информации о товаре </summary>
-
-```
-curl --location --request GET 'localhost:8088/item/1' \
---header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjM5Mjk2NTEwLCJleHAiOjE2NDE4ODg1MTAsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.v-EYaLqelzIn0emvlRPTzg7LIA4-y-Q0zsa9NREAJvTmh38gugeN0WIdbAQMKI10ql87fs9A4EncNeH3WydLdA'
-
-```
-
-* Разное предоставление информации в зависимости от роли (ADMIN, USER)
-* `USER`- Получение краткой информации о товаре. Выдаётся исключение, если он неактивен или отсутствует
-* `ADMIN`- Получение расширенной информации о товаре. Выдаётся исключение, если такой товар отсутствуют
-
-</details>
-
----
-
-<details>
-<summary> Получение всех цен товара </summary>
-
-```
-curl --location --request GET 'localhost:8088/item/1/prices' \
---header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjM5Mjk2NTEwLCJleHAiOjE2NDE4ODg1MTAsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.v-EYaLqelzIn0emvlRPTzg7LIA4-y-Q0zsa9NREAJvTmh38gugeN0WIdbAQMKI10ql87fs9A4EncNeH3WydLdA'
-
-```
-
-* Выдаётся исключение, если такой товар отсутствует
-* Разное предоставление информации в зависимости от роли (ADMIN, USER)
-* `USER`- Получение списка цен с краткой информацией. Выдаётся исключение, если они не активны
-* `ADMIN`- Получение списка цен с расширенной информацией.
-
-</details>
-
----
-
-<details>
-<summary> Покупка товара </summary>
-
-```
-curl --location --request POST 'localhost:8088/item/1/buy?currencytitle=gold&amountitem=2' \
---header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjM5Mjk2NTEwLCJleHAiOjE2NDE4ODg1MTAsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.v-EYaLqelzIn0emvlRPTzg7LIA4-y-Q0zsa9NREAJvTmh38gugeN0WIdbAQMKI10ql87fs9A4EncNeH3WydLdA'
-
-```
-
-* Выдаётся исключение, если товар неактивен или отсутствует
-* Выдаётся исключение, если цена товара в такой валюте неактивна или отсутствует
-* Выдаётся исключение, если у пользователя недостаточно валюты `gold` для покупки указанного количества товаров `amountitem`
-* Валюта `gold` списывается со `account` 
-* Товар добавляется пользователю в инвентарь `inventory`. Если такого товара у пользователя ещё не было - создаётся новая ячейка `inventoryUnit` 
-
-</details>
-
----
-
-> <h3> Пользователь </h3>
-
-<details>
-<summary> Свой профиль </summary>
-
-```
-curl --location --request GET 'localhost:8088/user/profile' \
---header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjM5Mjk2NTEwLCJleHAiOjE2NDE4ODg1MTAsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.v-EYaLqelzIn0emvlRPTzg7LIA4-y-Q0zsa9NREAJvTmh38gugeN0WIdbAQMKI10ql87fs9A4EncNeH3WydLdA'
-```
-
-* Получение информации о своём профиле, балансе `$` и счетах `accounts`
-
-</details>
-
----
-
-<details>
-<summary> Просмотр своего инвентаря  </summary>
-
-```
-curl --location --request GET 'localhost:8088/user/profile/inventory' \
---header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjM5Mjk2NTEwLCJleHAiOjE2NDE4ODg1MTAsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.v-EYaLqelzIn0emvlRPTzg7LIA4-y-Q0zsa9NREAJvTmh38gugeN0WIdbAQMKI10ql87fs9A4EncNeH3WydLdA'
-
-```
-
-* Получение информации о своём инвентаре `inventory`
-
-</details>
-
----
-
-<details>
-<summary> Просмотр профиля любого пользователя  </summary>
-
-```
-curl --location --request GET 'localhost:8088/user/admin' \
---header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjM5Mjk2NTEwLCJleHAiOjE2NDE4ODg1MTAsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.v-EYaLqelzIn0emvlRPTzg7LIA4-y-Q0zsa9NREAJvTmh38gugeN0WIdbAQMKI10ql87fs9A4EncNeH3WydLdA'
-
-```
-
-* Выдаётся исключение, если такой пользователь отсутствует
-* Получение краткой информации о другом пользователе
-
-</details>
-
----
-
-<details>
-<summary> Получение списка всех пользователей  </summary>
-
-```
-curl --location --request GET 'localhost:8088/user/admin' \
---header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjM5Mjk2NTEwLCJleHAiOjE2NDE4ODg1MTAsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.v-EYaLqelzIn0emvlRPTzg7LIA4-y-Q0zsa9NREAJvTmh38gugeN0WIdbAQMKI10ql87fs9A4EncNeH3WydLdA'
-
-```
-
-* Доступно только `ADMIN`
-* Получение списка с краткой информацией о всех пользователях
-
-</details>
 
 ---
 
