@@ -124,8 +124,8 @@ curl --location --request POST 'localhost:8088/auth/login' \
 
 * Авторизация осуществляется через `username` и `password`
 * Для авторизации используйте уже существующего пользователя 
-`username` - `admin`
-`password` - `admin`
+- `username` - `admin`
+- `password` - `admin`
 
 </details>
 
@@ -247,9 +247,9 @@ curl --location --request POST 'localhost:8088/poll/1/start' \
 > <h3> Вопросы  </h3>
 
 Добавлены три вида вопросов:
-`TEXT_ANSWER` - можно ввести ответ в свободной форме в виде текста
-`ONE_ANSWER` - выбрать один из предложенных
-`MANY_ANSWER` - выбрать несколько из предложенных
+- `TEXT_ANSWER` - можно ввести ответ в свободной форме в виде текста
+- `ONE_ANSWER` - выбрать один из предложенных
+- `MANY_ANSWER` - выбрать несколько из предложенных
 
 <details>
 <summary> Добавление вопроса в опрос </summary>
