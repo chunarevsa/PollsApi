@@ -17,7 +17,7 @@ public class UserPollsDto {
 		
 		UserPollsDto userPollsDto = new UserPollsDto();
         userPollsDto.setId(userPolls.getId());
-        String uniequeId = "Ваш уникальный индентификатор" + Long.toString(userPolls.getUserUniqueId());
+        String uniequeId = "Ваш уникальный индентификатор :" + Long.toString(userPolls.getUserUniqueId());
         userPollsDto.setUserUniequeId(uniequeId);
         userPollsDto.setUserPollAnswersDto(userPolls.getUserPollAnswers().stream()
                 .map(UserPollAnswersDto :: fromUser).collect(Collectors.toSet()));

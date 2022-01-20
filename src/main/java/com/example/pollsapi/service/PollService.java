@@ -51,8 +51,19 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 
 	// только активных по дате и из актив
 	@Override
-	public List<Poll> getPolls() {
+	public Set<Poll> getPolls() {
 		
+		Set<Poll> activePolls = pollRepository.findAllByActive(true);
+		Set<Poll> collect = activePolls.stream()
+				.filter(poll -> !validateExpirationDate(poll.getExpirationDate()))
+				.collect(Collectors.toSet());
+
+		return collect;
+	}
+
+	@Override
+	public List<Poll> getPollsFromAdmin() {
+
 		return pollRepository.findAll();
 	}
 
