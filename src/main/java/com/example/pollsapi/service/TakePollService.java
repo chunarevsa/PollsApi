@@ -43,6 +43,7 @@ public class TakePollService {
 				UserAnswer userAnswer = new UserAnswer();
 				userAnswer.setUserAnswerBody(userAnswerBody);
 				userAnswer.setQuestionBody(pollQuestion.getBody());
+				userAnswer.setQuestion(pollQuestion);
 				userPollAnswers.getUserAnswers().add(userAnswer);
 
 			} else if (questionType == QuestionType.ONE_ANSWER) {
@@ -62,6 +63,7 @@ public class TakePollService {
 				UserAnswer userAnswer = new UserAnswer();
 				userAnswer.setUserAnswerBody(answerFromPoll.getText());
 				userAnswer.setQuestionBody(pollQuestion.getBody());
+				userAnswer.setQuestion(pollQuestion);
 				userPollAnswers.getUserAnswers().add(userAnswer);
 	
 			} else if (questionType == QuestionType.MANY_ANSWER) {
