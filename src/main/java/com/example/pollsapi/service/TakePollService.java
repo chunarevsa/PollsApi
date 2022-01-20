@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.example.pollsapi.entity.Answer;
 import com.example.pollsapi.entity.Question;
@@ -12,11 +13,21 @@ import com.example.pollsapi.entity.QuestionType;
 import com.example.pollsapi.entity.UserAnswer;
 import com.example.pollsapi.entity.UserPollAnswers;
 import com.example.pollsapi.exception.ResourceNotFoundException;
+import com.example.pollsapi.repository.UserAnswerRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TakePollService {
+
+	private final UserAnswerRepository userAnswerRepository;
+
+	@Autowired
+	public TakePollService(UserAnswerRepository userAnswerRepository) {
+		this.userAnswerRepository = userAnswerRepository;
+	}
+
 
     public UserPollAnswers getUserPollAnswers(Set<Question> pollQuestions) {
         
@@ -98,6 +109,12 @@ public class TakePollService {
 		in1.close();
 		in2.close();
 		in3.close();
+		// Сохранение ответов пользователя
+		
+		userPollAnswers.getUserAnswers().stream()
+				.map(saveUserAnswer1 -> saveUserAnswer(saveUserAnswer1))
+				.collect(Collectors.toSet());
+
         return userPollAnswers;
     }
     
@@ -115,6 +132,10 @@ public class TakePollService {
 		}
 		return map;
 	} 
+
+	private UserAnswer saveUserAnswer(UserAnswer saveUserAnswer1) {
+		return userAnswerRepository.save(saveUserAnswer1);
+	}
 
 
 }

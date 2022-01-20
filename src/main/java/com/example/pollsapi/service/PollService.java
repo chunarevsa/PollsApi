@@ -3,24 +3,14 @@ package com.example.pollsapi.service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.validation.constraints.Null;
-
-import com.example.pollsapi.entity.Answer;
+import com.example.pollsapi.dto.UserPollsDto;
 import com.example.pollsapi.entity.Poll;
 import com.example.pollsapi.entity.Question;
-import com.example.pollsapi.entity.QuestionType;
-import com.example.pollsapi.entity.UserAnswer;
 import com.example.pollsapi.entity.UserPollAnswers;
 import com.example.pollsapi.entity.UserPolls;
 import com.example.pollsapi.exception.AlreadyUseException;
@@ -28,9 +18,7 @@ import com.example.pollsapi.exception.FinalDateException;
 import com.example.pollsapi.exception.ResourceNotFoundException;
 import com.example.pollsapi.payload.PollRequest;
 import com.example.pollsapi.payload.QuestionRequest;
-import com.example.pollsapi.repository.AnswerRepository;
 import com.example.pollsapi.repository.PollRepository;
-import com.example.pollsapi.repository.UserAnswerRepository;
 import com.example.pollsapi.repository.UserPollAnswersRepository;
 import com.example.pollsapi.repository.UserPollsRepository;
 
@@ -38,31 +26,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 //TODO: активный опрос по времени и isActive
-// проверка на дату, что бы не была меньше нау
+
 @Service
 public class PollService implements DeleteInterface, PollServiceInterface {
 
 	private final PollRepository pollRepository;
 	private final QuestionService questionService;
-	private final AnswerRepository answerRepository;
 	private final UserPollsRepository userPollsRepository;
-	private final UserAnswerRepository userAnswerRepository;
 	private final UserPollAnswersRepository userPollAnswersRepository;
 	private final TakePollService takePollService;
 
 	@Autowired
 	public PollService(PollRepository pollRepository, 
 							QuestionService questionService,
-							AnswerRepository answerRepository,
 							UserPollsRepository userPollsRepository,
-							UserAnswerRepository userAnswerRepository,
 							UserPollAnswersRepository userPollAnswersRepository,
 							TakePollService takePollService) {
 		this.pollRepository = pollRepository;
 		this.questionService = questionService;
-		this.answerRepository = answerRepository;
 		this.userPollsRepository = userPollsRepository;
-		this.userAnswerRepository = userAnswerRepository;
 		this.userPollAnswersRepository = userPollAnswersRepository;
 		this.takePollService = takePollService;
 	}
@@ -75,7 +57,7 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 	}
 
 	@Override
-	public Object start(Long pollId, Long userUniqueId) {
+	public UserPollsDto start(Long pollId, Long userUniqueId) {
 	
 		Poll poll = findById(pollId);
 
@@ -100,11 +82,7 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 	
 		UserPollAnswers userPollAnswers = takePollService.getUserPollAnswers(pollQuestions);
 
-		// Сохранение ответов пользователя
 		userPollAnswers.setPoll(poll);
-		userPollAnswers.getUserAnswers().stream()
-				.map(saveUserAnswer1 -> saveUserAnswer(saveUserAnswer1))
-				.collect(Collectors.toSet());
 
 		// Сохранение пройденого опроса
 		userPolls.getUserPollAnswers().add(userPollAnswers);
@@ -112,7 +90,9 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 				.map(saveUserPollAnswers -> saveUserPollAnswers(saveUserPollAnswers))
 				.collect(Collectors.toSet());
 
-		return saveUserPolls(userPolls);
+		UserPolls savedUserPolls = saveUserPolls(userPolls);
+		return UserPollsDto.fromUser(savedUserPolls);
+
 	}
 
 
@@ -215,10 +195,6 @@ public class PollService implements DeleteInterface, PollServiceInterface {
 
 	private UserPollAnswers saveUserPollAnswers(UserPollAnswers userPollAnswers) {
 		return userPollAnswersRepository.save(userPollAnswers);
-	}
-
-	private UserAnswer saveUserAnswer(UserAnswer saveUserAnswer1) {
-		return userAnswerRepository.save(saveUserAnswer1);
 	}
 
 }
