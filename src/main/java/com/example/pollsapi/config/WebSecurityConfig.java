@@ -81,7 +81,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					.and()
 						.authorizeRequests()
 						.antMatchers( // Доступны без авторизации
-									"/auth/*"
+									"/auth/*",
+									"/poll/**"
 									
 									).permitAll()
 						.anyRequest().authenticated(); // остально только для авторизованых	
