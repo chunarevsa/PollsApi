@@ -10,9 +10,9 @@ services:
    volumes:
    - ./nginx/conf.d:/etc/nginx/conf.d
    depends_on:
-   - websitechsa
+   - pollsapi
 
-  websitechsa:
+  pollsapi:
     build:
       context: .
     ports:
