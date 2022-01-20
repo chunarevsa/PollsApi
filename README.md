@@ -101,7 +101,7 @@ cd PollsApi
 
 Для удобства запросы из `Postman` доступны в файле 
 
-* `Website.postman_collection.json`
+* `PollsApi.postman_collection.json`
 
 
 
