@@ -1,0 +1,445 @@
+{
+	"info": {
+		"_postman_id": "c63492b7-6146-4c05-87fd-2333c0eb221f",
+		"name": "PollsApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Polls",
+			"item": [
+				{
+					"name": "/poll/all",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjQyNjU5NzAwLCJleHAiOjE2NDUyNTE3MDAsImF1dGhvcml0aWVzIjoiUk9MRV9BRE1JTixST0xFX1VTRVIifQ.UzIP3coQN828R0aEB-SxrwgUIbPQWSOmQwZCYN4dGNFSlhtz8f6u47GYc7xhuyIKBrym8YQeYcZM09baM-npzQ",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8088/poll/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"poll",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/poll/all/admin",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjQyNjU5NzAwLCJleHAiOjE2NDUyNTE3MDAsImF1dGhvcml0aWVzIjoiUk9MRV9BRE1JTixST0xFX1VTRVIifQ.UzIP3coQN828R0aEB-SxrwgUIbPQWSOmQwZCYN4dGNFSlhtz8f6u47GYc7xhuyIKBrym8YQeYcZM09baM-npzQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8088/poll/all/admin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"poll",
+								"all",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/poll/{pollid}/start",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjQyNjEzODI5LCJleHAiOjE2NDUyMDU4MjksImF1dGhvcml0aWVzIjoiUk9MRV9BRE1JTixST0xFX1VTRVIifQ.exTc2Ph127a6v1gYGK8tVRxOKzd6K9nDx8T_mvcuHhwC9oRREeAHnemZ8eWsA5WcM4J9Z-qSrd3bVdAeDdWEtg",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8088/poll/1/start",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"poll",
+								"1",
+								"start"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/poll/add",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjQyNjU5NzAwLCJleHAiOjE2NDUyNTE3MDAsImF1dGhvcml0aWVzIjoiUk9MRV9BRE1JTixST0xFX1VTRVIifQ.UzIP3coQN828R0aEB-SxrwgUIbPQWSOmQwZCYN4dGNFSlhtz8f6u47GYc7xhuyIKBrym8YQeYcZM09baM-npzQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Poll number 1\",\r\n    \"description\": \"Cool poll\",\r\n    \"active\": \"true\",\r\n    \"expirationDate\": \"2022-02-25\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8088/poll/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"poll",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/poll/{pollid}/edit",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjQyNDMwNTA3LCJleHAiOjE2NDUwMjI1MDcsImF1dGhvcml0aWVzIjoiUk9MRV9BRE1JTixST0xFX1VTRVIifQ.LUIUea1kiY4eMdFIBuLjLE7SOUXMILyVTFGuIZRhdegNZ-YyfuNyeSgYJQfEZa1JZGnv5Ie7-ldxNzOXV-7gTQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Опрос 1\",\r\n    \"description\": \"Классный опрос\",\r\n    \"active\": \"true\",\r\n    \"expirationDate\": \"2022-01-27\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8088/poll/1/edit",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"poll",
+								"1",
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/poll/{pollid}/delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjQyNDMwNTA3LCJleHAiOjE2NDUwMjI1MDcsImF1dGhvcml0aWVzIjoiUk9MRV9BRE1JTixST0xFX1VTRVIifQ.LUIUea1kiY4eMdFIBuLjLE7SOUXMILyVTFGuIZRhdegNZ-YyfuNyeSgYJQfEZa1JZGnv5Ie7-ldxNzOXV-7gTQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8088/poll/1/delete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"poll",
+								"1",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Question",
+			"item": [
+				{
+					"name": "poll/{pollid}/question/add TEXT",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjQyNjE3NDU0LCJleHAiOjE2NDUyMDk0NTQsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.D-Lto88rt0zaYlpIrOQzDd19zbLk5N9p3AzMTw_mM_UhmTdzzGwQEjj9F4XsdhV8X7u2mElfEiiK_H4TJkRxAQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"body\": \"any question\",\r\n    \"questionType\": \"TEXT_ANSWER\",\r\n    \"active\": \"true\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8088/poll/1/question/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"poll",
+								"1",
+								"question",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "poll/{pollid}/question/add ONE",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjQyNjE3NDU0LCJleHAiOjE2NDUyMDk0NTQsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.D-Lto88rt0zaYlpIrOQzDd19zbLk5N9p3AzMTw_mM_UhmTdzzGwQEjj9F4XsdhV8X7u2mElfEiiK_H4TJkRxAQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"body\": \"question 2\",\r\n    \"questionType\": \"ONE_ANSWER\",\r\n    \"active\": \"true\",\r\n        \"answers\": [\r\n            {\r\n                \"text\": \"answer 1\"\r\n            },\r\n            {\r\n                \"text\": \"answer 2\"\r\n            }\r\n                    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8088/poll/1/question/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"poll",
+								"1",
+								"question",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "poll/{pollid}/question/add MANY",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjQyNjE3NDU0LCJleHAiOjE2NDUyMDk0NTQsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSLFJPTEVfQURNSU4ifQ.D-Lto88rt0zaYlpIrOQzDd19zbLk5N9p3AzMTw_mM_UhmTdzzGwQEjj9F4XsdhV8X7u2mElfEiiK_H4TJkRxAQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"body\": \"question 3\",\r\n    \"questionType\": \"MANY_ANSWER\",\r\n    \"active\": \"true\",\r\n        \"answers\": [\r\n            {\r\n                \"text\": \"answer 1\"\r\n            },\r\n            {\r\n                \"text\": \"answer 2\"\r\n            }\r\n                    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8088/poll/1/question/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"poll",
+								"1",
+								"question",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "poll/{pollid}/question/{questionQueueId}/edit",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjQyNDMwNTA3LCJleHAiOjE2NDUwMjI1MDcsImF1dGhvcml0aWVzIjoiUk9MRV9BRE1JTixST0xFX1VTRVIifQ.LUIUea1kiY4eMdFIBuLjLE7SOUXMILyVTFGuIZRhdegNZ-YyfuNyeSgYJQfEZa1JZGnv5Ie7-ldxNzOXV-7gTQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"Какой-то вопрос 2\",\r\n    \"questionType\": \"TEXT_ANSWER\",\r\n    \"active\": \"true\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8088/poll/1/question/2/edit",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"poll",
+								"1",
+								"question",
+								"2",
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "poll/{pollid}/question/{questionId}/delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjQyNDMwNTA3LCJleHAiOjE2NDUwMjI1MDcsImF1dGhvcml0aWVzIjoiUk9MRV9BRE1JTixST0xFX1VTRVIifQ.LUIUea1kiY4eMdFIBuLjLE7SOUXMILyVTFGuIZRhdegNZ-YyfuNyeSgYJQfEZa1JZGnv5Ie7-ldxNzOXV-7gTQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8088/poll/1/question/1/delete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"poll",
+								"1",
+								"question",
+								"1",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "/auth/login ADMIN",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8088/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

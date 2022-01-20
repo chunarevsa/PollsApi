@@ -61,6 +61,14 @@ public class PollController {
 		return ResponseEntity.ok().body(pollService.getPolls());
 	}
 
+	@GetMapping("/all/admin")
+	@PreAuthorize("hasRole('ADMIN')")
+	// @ApiOperation(value = "Получение Items. Формат ответа зависить от роли")
+	public ResponseEntity getPollsFromAdmin() {
+
+		return ResponseEntity.ok().body(pollService.getPollsFromAdmin());
+	}
+
 	/**
 	 * Прохождение опроса
 	 * @param poleId
